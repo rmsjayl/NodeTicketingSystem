@@ -1,3 +1,51 @@
+🎯 Business Requirements: Ticketing System
+
+1. Objective
+    To design and implement a centralized ticketing system that enables users to submit, track, and manage support or service requests  efficiently. The system should streamline communication between requesters and support teams, improve resolution times, and provide  transparency across all ticket statuses.
+
+2. Key Features & Functional Requirements
+    📝 Ticket Creation
+        - Users can create tickets via web interface or email.
+        - Required fields: Subject, Description, Category, Priority, Attachments (optional).
+        - Auto-assign ticket ID upon creation.
+
+    📊 Ticket Dashboard
+        - Users and agents can view ticket status (Open, In Progress, Resolved, Closed).
+        - Filters by date, category, priority, and assigned agent.
+        - Search functionality by ticket ID or keywords.
+
+    👥 User Roles & Permissions
+        - Role	Capabilities
+        - Requester	Create/view own tickets, comment, close resolved tickets
+        - Agent	View/assign tickets, update status, comment, escalate
+        - Admin	Full access, manage users, configure categories, generate reports
+
+    🔄 Ticket Lifecycle
+        - Status flow: Open → In Progress → Resolved → Closed
+        - Agents can reassign or escalate tickets.
+        - Requesters can reopen resolved tickets within a defined time window.
+
+    📬 Notifications
+        - Email alerts for ticket creation, status updates, comments, and resolution.
+        - Configurable notification preferences per user.
+
+    📈 Reporting & Analytics
+        - Daily/weekly/monthly ticket volume reports.
+        - SLA compliance tracking.
+        - Agent performance metrics.
+
+3. Non-Functional Requirements
+    - System must support concurrent users (scalable to 10,000+).
+    - Mobile-responsive UI.
+    - Data encryption at rest and in transit.
+    - 99.9% uptime SLA.
+    
+4. Success Metrics
+    - 80% of tickets resolved within SLA.
+    - 90% user satisfaction rating via post-resolution surveys.
+    - Reduction in average resolution time by 30% within 3 months of launch.
+
+
 # Node.js Dev Container
 
 This is a simple starter for a Node.js Dev Container
