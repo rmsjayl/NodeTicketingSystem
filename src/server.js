@@ -1,9 +1,12 @@
 const express = require("express");
 const { sequelize } = require("./database/db_conn");
 const commonConstants = require("./common/constants");
+const authRoutes = require("./routes/authRoutes")
 const app = express();
 
 const PORT = process.env.PORT
+
+app.use("/api", authRoutes);
 
 sequelize.authenticate()
   .then(()=> {
