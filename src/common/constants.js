@@ -1,4 +1,10 @@
 var commonConstants = {
+    DATABASE_TABLES: {
+        USER: "User",
+    },
+    DATABASE_TABLE_CREATION: {
+        SUCCESS: "Table created successfully.",
+    },
     DATABASE_CONNECTION: {
         SUCCESS: "Database connection is successfully established.",
         FAILED: "Unable to connect to the database."
