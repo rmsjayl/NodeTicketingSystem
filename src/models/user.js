@@ -2,6 +2,7 @@ const commonConstants = require("../common/constants");
 const commonHelpers = require("../common/helpers");
 const sequelize = require("../database/db_conn");
 const { DataTypes } = require("sequelize");
+const sendEmail = require("../utilities/sendEmail");
 
 const User = sequelize.define("User", {
     id: {
@@ -49,8 +50,8 @@ User.afterCreate(async (user) => {
     const token = commonHelpers.generateRandomToken();
     user.accountVerficationToken = token;
     user.accountVerificationExpiry = Date.now() + 30 * 60 * 1000;
-    console.log("After create hook")
-    commonHelpers.sendVerificationEmail(user.email, token)
+
+    await sendEmail(user.email, commonConstants.SEND_EMAIL.ACCOUNT_VERIFICATION);
 });
 
 User.sync({ alter: true })

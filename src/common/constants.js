@@ -1,6 +1,6 @@
 var commonConstants = {
     DATABASE_TABLES: {
-        USER: "User",
+        USER: "User ",
     },
     DATABASE_TABLE_CREATION: {
         SUCCESS: "Table created successfully.",
@@ -56,7 +56,11 @@ var commonConstants = {
         FAILED: "Invalid credentials. Please try again ..."
     },
 
-
+    SEND_EMAIL: {
+        SUCCESS: "Email sent successfully.",
+        FAILED: "Email failed to send. ",
+        ACCOUNT_VERIFICATION: "Account Verification",
+    }
 }
 
 module.exports = commonConstants
