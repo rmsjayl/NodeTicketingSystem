@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const crypt = require("crypto-js");
+const crypto = require("crypto-js");
 const commonConstants = require("./constants");
 
 const commonHelpers = {
@@ -29,6 +29,14 @@ const commonHelpers = {
             }
         }
     },
+    sendVerificationEmail: function (email, token) {
+        console.log("Click here to verify your account...")
+        console.log(`Sent to email: ${email}`)
+        console.log(`Token: ${token}`)
+    },
+    generateRandomToken: function () {
+        return crypto.lib.WordArray.random(16).toString(crypto.enc.Hex);
+    }
 }
 
 module.exports = commonHelpers;
