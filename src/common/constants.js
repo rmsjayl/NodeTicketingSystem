@@ -29,6 +29,10 @@ var commonConstants = {
         GATEWAY_TIMEOUT: 504,
     },
 
+    PAYLOAD_VALIDATION: {
+        KEY_NOT_PROVIDED: "Request is invalid."
+    },
+
     //USER MODEL
     USER: {
         RETRIEVE: {
@@ -39,7 +43,14 @@ var commonConstants = {
             SUCCESS: "User created successfully.",
             FAILED: "Unable to create a user. "
         }
-    }
+    },
+
+    LOGIN: {
+        SUCCESS: "User logged in successfully.",
+        FAILED: "Invalid credentials. Please try again ..."
+    },
+
+
 }
 
 module.exports = commonConstants
