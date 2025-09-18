@@ -1,14 +1,20 @@
 const express = require("express");
-const { sequelize } = require("./database/db_conn");
+const sequelize = require("./database/db_conn");
+
+const User = require("./models/user");
+
 const commonConstants = require("./common/constants");
-const authRoutes = require("./routes/authRoutes")
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 const app = express();
 
 const PORT = process.env.PORT
 
-app.use("/api", authRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
-sequelize.authenticate()
+sequelize
+  .sync()
   .then(()=> {
     console.log(commonConstants.DATABASE_CONNECTION.SUCCESS);
   })
