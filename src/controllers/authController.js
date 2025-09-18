@@ -1,11 +1,27 @@
+const commonConstants = require("../common/constants");
 const commonHelpers = require("../common/helpers");
 const User = require("../models/user");
 
 exports.register = async (req, res) => {
-    try {
-        const { firstName, lastName, email, password, roles } = req.body;
+    const { firstName, lastName, email, password, roles } = req.body;
 
-        console.log(req.body);
+    try {
+        const payload = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password,
+            roles: roles
+        };
+
+        const validation = commonHelpers.payloadValidation(payload);
+
+        if (validation) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: validation
+            });
+        }
 
         const user = await User.create({
             firstName: firstName,
@@ -22,21 +38,71 @@ exports.register = async (req, res) => {
             role: user.roles
         }
 
-        res.status(commonConstants.STATUS_CODE.CREATED).json({
+        return res.status(commonConstants.STATUS_CODE.CREATED).json({
             success: true,
             message: commonConstants.USER.CREATE.SUCCESS,
             user: userResponse
         })
     } catch (error) {
-        return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
             success: false,
-            message: commonConstants.USER.CREATE.FAILED + error.message
+            message: error.message
         });
     }
 };
 
 exports.login = async (req, res) => {
-    res.send("Login route is working...");
+
+    const { email, password } = req.body;
+
+    try {
+        const payload = {
+            email: email,
+            password: password,
+        };
+
+        const validation = commonHelpers.payloadValidation(payload)
+
+        if (validation) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: validation
+            });
+        }
+
+        const user = await User.findOne({
+            where: {
+                email: email
+            }
+        });
+
+        if (!user) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.LOGIN.FAILED,
+            })
+        }
+
+        const isMatch = commonHelpers.passwordCompare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(commonConstants.STATUS_CODE.UNAUTHORIZED).json({
+                success: false,
+                message: commonConstants.LOGIN.FAILED,
+            });
+        }
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.LOGIN.SUCCESS,
+        })
+
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message,
+        });
+    }
 };
 
 exports.resetPassword = async (req, res) => {
