@@ -7,7 +7,7 @@ const commonConstants = require("./common/constants");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const app = express();
-
+app.use(express.json());
 const PORT = process.env.PORT
 
 app.use("/api/auth", authRoutes);
