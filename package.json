@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/Ottsupi/node-container#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "crypto-js": "^4.2.0",
     "express": "^5.1.0",
     "nodemon": "^3.1.10",
     "pg": "^8.16.3",
