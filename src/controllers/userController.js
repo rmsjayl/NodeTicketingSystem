@@ -1,4 +1,5 @@
-const commonConstants = require("../common/constants")
+const commonConstants = require("../common/constants");
+const commonHelpers = require("../common/helpers");
 const User = require("../models/user")
 
 exports.getUsers = async (req, res) => {
@@ -44,7 +45,7 @@ exports.createUser = async (req, res) => {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            password: password,
+            password: commonHelpers.passwordHasher(password),
             roles: roles
         });
 
