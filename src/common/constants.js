@@ -9,8 +9,8 @@ var commonConstants = {
         SUCCESS: "Database connection is successfully established.",
         FAILED: "Unable to connect to the database."
     },
-    SERVCER_CONNECTION: {
-        SUCCESS: "SERVER IS RUNNING on PORT"
+    SERVER_CONNECTION: {
+        SUCCESS: "SERVER IS RUNNING on PORT "
     },
 
     PAGINATION: {
@@ -43,11 +43,21 @@ var commonConstants = {
     USER: {
         RETRIEVE: {
             SUCCESS: "User retrieved successfully.",
-            FAILED: "Unable to retrieve user. "
+            FAILED: "Unable to retrieve user. ",
+            NOT_FOUND: "No users found."
         },
         CREATE: {
             SUCCESS: "User created successfully.",
-            FAILED: "Unable to create a user. "
+            FAILED: "Unable to create a user. ",
+            ALREADY_EXISTS: "User already exists. Please try different email."
+        },
+        UPDATE: {
+            SUCCESS: "User updated successfully.",
+            FAILED: "Unable to update user. "
+        },
+        SEND_EMAIL_VERIFICATION: {
+            SUCCESS: "User account creation was sent to user's email.",
+            FAILED: "Unable to send email upon creation. "
         }
     },
 
@@ -60,7 +70,7 @@ var commonConstants = {
         SUCCESS: "Email sent successfully.",
         FAILED: "Email failed to send. ",
         ACCOUNT_VERIFICATION: "Account Verification",
-    }
+    },
 }
 
 module.exports = commonConstants
