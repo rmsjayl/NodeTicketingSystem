@@ -58,7 +58,6 @@ var commonConstants = {
         SEND_EMAIL_VERIFICATION: {
             SUCCESS: "User account creation was sent to user's email.",
             FAILED: "Unable to send email upon creation. "
-            FAILED: "Unable to create a user. "
         },
         GOOGLE: {
             CREATE: {
@@ -73,7 +72,7 @@ var commonConstants = {
             },
             CREDENTIAL:{
                 DEFAULT_USER_PASSWORD: "google",
-                DEFUALT_USER_ROLE: "user"
+                DEFAULT_USER_ROLE: "user"
             }
         }
     },
