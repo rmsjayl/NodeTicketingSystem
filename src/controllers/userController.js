@@ -16,6 +16,20 @@ exports.getUsers = async (req, res) => {
 
         const totalPage = Math.ceil(count / limit);
 
+        if(page > totalPage && totalPage > 0) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.PAGINATION.INVALID_PAGE_NUMBER + totalPage
+            })
+        }
+
+        if(count == 0) {
+            return res.status(commonConstants.STATUS_CODE.ACCEPTED).json({
+                success: false,
+                message: commonConstants.USER.RETRIEVE.NOT_FOUND
+            });
+        }
+
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,
             message: commonConstants.USER.RETRIEVE.SUCCESS,
