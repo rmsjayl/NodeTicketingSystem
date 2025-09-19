@@ -22,6 +22,9 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    username: {
+        type: DataTypes.STRING,
+    },
     password: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -41,17 +44,25 @@ const User = sequelize.define("User", {
     accountVerificationExpiry: {
         type: DataTypes.DATE,
         allowNull: true,
-    }
+    },
 }, {
     timestamps: true,
 });
 
 User.afterCreate(async (user) => {
     const token = commonHelpers.generateRandomToken();
-    user.accountVerficationToken = token;
-    user.accountVerificationExpiry = Date.now() + 30 * 60 * 1000;
+    const expires = Date.now() + 30 * 60 * 1000;
 
-    await sendEmail(user.email, commonConstants.SEND_EMAIL.ACCOUNT_VERIFICATION);
+    await user.update({
+        accountVerficationToken: token,
+        accountVerificationExpiry: expires,
+    })
+    .then(() => console.log(commonConstants.USER.UPDATE.SUCCESS))
+    .catch((error) => console.log(commonConstants.USER.UPDATE.FAILED + error.message));
+
+    await sendEmail(user.email, commonConstants.SEND_EMAIL.ACCOUNT_VERIFICATION)
+    .then(() => console.log(commonConstants.USER.SEND_EMAIL_VERIFICATION.SUCCESS))
+    .catch((error) => commonConstants.USER.SEND_EMAIL_VERIFICATION.FAILED + error.message);
 });
 
 User.sync({ alter: true })
