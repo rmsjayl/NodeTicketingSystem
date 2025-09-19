@@ -3,7 +3,7 @@ const commonHelpers = require("../common/helpers");
 const User = require("../models/user");
 
 exports.register = async (req, res) => {
-    const { firstName, lastName, email, password, roles } = req.body;
+    const { firstName, lastName, email, password, roles, username } = req.body;
 
     try {
         const payload = {
@@ -11,7 +11,8 @@ exports.register = async (req, res) => {
             lastName: lastName,
             email: email,
             password: password,
-            roles: roles
+            roles: roles,
+            username: username,
         };
 
         const validation = commonHelpers.payloadValidation(payload);
@@ -20,6 +21,24 @@ exports.register = async (req, res) => {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
                 message: validation
+            });
+        }
+
+        const userExists = await User.findOne({ where: { email: req.body.email } })
+
+        if (userExists) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.USER.CREATE.ALREADY_EXISTS
+            });
+        };
+
+        const userNameExists = await User.findOne({ where: { username: req.body.username } });
+
+        if (userNameExists) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.USER.CREATE.ALREADY_EXISTS
             });
         }
 
@@ -32,9 +51,7 @@ exports.register = async (req, res) => {
         });
 
         const userResponse = {
-            id: user.id,
-            firstName: user.firstName,
-            email: user.email,
+            username: user.username,
             role: user.roles
         }
 
@@ -53,11 +70,11 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
 
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     try {
         const payload = {
-            email: email,
+            username: username,
             password: password,
         };
 
@@ -72,7 +89,7 @@ exports.login = async (req, res) => {
 
         const user = await User.findOne({
             where: {
-                email: email
+                username: username
             }
         });
 

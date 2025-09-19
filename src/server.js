@@ -23,5 +23,5 @@ sequelize
   })
 
 app.listen(PORT, () => console.log(
-  commonConstants.SERVCER_CONNECTION.SUCCESS + PORT
+  commonConstants.SERVER_CONNECTION.SUCCESS + PORT
 ))
