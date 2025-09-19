@@ -8,7 +8,7 @@ exports.getUsers = async (req, res) => {
         const limit = parseInt(req.query.limit) || commonConstants.PAGINATION.LIMIT;
         const offset = (page - 1) * limit;
 
-        const { count, rows} = await User.findAndCountAll({
+        const { count, rows } = await User.findAndCountAll({
             order: [["createdAt", "DESC"]],
             limit,
             offset

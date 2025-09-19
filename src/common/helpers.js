@@ -1,11 +1,12 @@
 const bcrypt = require("bcrypt");
 const crypto = require("crypto-js");
+const jwt = require("jsonwebtoken");
 const commonConstants = require("./constants");
 
 const commonHelpers = {
     passwordHasher: function (password) {
         const salt = bcrypt.genSaltSync(Number(process.env.SALT_ROUNDS));
-        return bcrypt.hashSync(password, salt, function(error, hash) {
+        return bcrypt.hashSync(password, salt, function (error, hash) {
             if (error) {
                 return error
             }
@@ -13,7 +14,7 @@ const commonHelpers = {
             return hash;
         });
     },
-    passwordCompare: function (password, hash){
+    passwordCompare: function (password, hash) {
         return bcrypt.compareSync(password, hash, function (error, result) {
             if (error) {
                 return error;
@@ -23,8 +24,8 @@ const commonHelpers = {
         })
     },
     payloadValidation: function (payload) {
-        for (let key in payload){
-            if(payload[key] === undefined || payload[key] === null || payload[key] === ""){
+        for (let key in payload) {
+            if (payload[key] === undefined || payload[key] === null || payload[key] === "") {
                 return `${key} is required. ${commonConstants.PAYLOAD_VALIDATION.KEY_NOT_PROVIDED}`
             }
         }
@@ -32,6 +33,16 @@ const commonHelpers = {
     generateRandomToken: function () {
         return crypto.lib.WordArray.random(16).toString(crypto.enc.Hex);
     },
+    generateAccessToken: function (email) {
+        return jwt.sign({ email }, process.env.JWT_SECRET, {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
+        });
+    },
+    generateRefreshToken: function (email) {
+        return jwt.sign({ email }, process.env.JWT_SECRET, {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+        });
+    }
 }
 
 module.exports = commonHelpers;

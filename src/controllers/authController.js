@@ -1,6 +1,8 @@
 const commonConstants = require("../common/constants");
 const commonHelpers = require("../common/helpers");
 const User = require("../models/user");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
     const { firstName, lastName, email, password, roles, username } = req.body;
@@ -133,3 +135,60 @@ exports.updatePassword = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
     res.send("Forgot password route is working ...");
 };
+
+exports.googleCallback = (req, res, next) => {
+    passport.authenticate("google", { session: false }, async (err, user) => {
+
+        try {
+            if (err || !user) {
+                return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                    success: false,
+                    message: commonConstants.USER.GOOGLE.AUTHENTICATION.FAILED + err.message,
+                });
+            }
+
+            const email = user.profile.emails[0].value;
+            const firstName = user.profile.name.givenName;
+            const lastName = user.profile.name.familyName;
+
+            let authenticatedUser = await User.findOne({
+                where: {
+                    email: email
+                }
+            });
+
+            // If the user doesn't exist, create them
+            if (!authenticatedUser) {
+                authenticatedUser = await User.create({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: commonHelpers.passwordHasher(commonConstants.USER.GOOGLE.CREDENTIAL.DEFAULT_USER_PASSWORD),
+                    roles: commonConstants.USER.GOOGLE.CREDENTIAL.DEFAULT_USER_ROLE
+                });
+            }
+
+            // Generate application access and refresh tokens (JWTs)
+            const accessTokenJWT = commonHelpers.generateAccessToken(email);
+
+            const refreshTokenJWT = commonHelpers.generateRefreshToken(email);
+
+            
+            return res.status(commonConstants.STATUS_CODE.OK).json({
+                success: true,
+                message: commonConstants.USER.GOOGLE.CREATE.SUCCESS,
+                data: authenticatedUser,
+                accessToken: accessTokenJWT,
+                refreshToken: refreshTokenJWT,
+            });
+
+        } catch (error) {
+            return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: error.message,
+            });
+        }
+
+    })(req, res, next);
+};
+
