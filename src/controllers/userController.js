@@ -7,6 +7,7 @@ exports.getUsers = async (req, res) => {
         const page = parseInt(req.query.page) || commonConstants.PAGINATION.PAGE;
         const limit = parseInt(req.query.limit) || commonConstants.PAGINATION.LIMIT;
         const offset = (page - 1) * limit;
+    
 
         const { count, rows } = await User.findAndCountAll({
             order: [["createdAt", "DESC"]],
@@ -16,14 +17,14 @@ exports.getUsers = async (req, res) => {
 
         const totalPage = Math.ceil(count / limit);
 
-        if(page > totalPage && totalPage > 0) {
+        if (page > totalPage && totalPage > 0) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
                 message: commonConstants.PAGINATION.INVALID_PAGE_NUMBER + totalPage
             })
         }
 
-        if(count == 0) {
+        if (count == 0) {
             return res.status(commonConstants.STATUS_CODE.ACCEPTED).json({
                 success: false,
                 message: commonConstants.USER.RETRIEVE.NOT_FOUND
@@ -46,5 +47,32 @@ exports.getUsers = async (req, res) => {
             success: false,
             message: commonConstants.USER.RETRIEVE.FAILED + error.message
         })
+    }
+}
+
+exports.deleteUsers = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const user = await User.findOne({ where: { id: id } })
+
+        if (!user) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.USER.RETRIEVE.FAILED
+            })
+        }
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.USER.RETRIEVE.SUCCESS
+        })
+
+
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message
+        });
     }
 }
