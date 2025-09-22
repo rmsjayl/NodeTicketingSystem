@@ -1,6 +1,8 @@
 var commonConstants = {
     DATABASE_TABLES: {
         USER: "User ",
+        TICKET: "Ticket ",
+        CATEGORY: "Category ",
     },
     DATABASE_TABLE_CREATION: {
         SUCCESS: "Table created successfully.",
@@ -87,6 +89,19 @@ var commonConstants = {
         FAILED: "Email failed to send. ",
         ACCOUNT_VERIFICATION: "Account Verification",
     },
+
+    TICKET: {
+        PRIORITY: {
+            HIGH: "High",
+            MEDIUM: "Medium",
+            LOW: "Low"
+        },
+        STATUS: {
+            OPEN: "Open",
+            IN_PROGRESS: "In Progress",
+            CLOSED: "Closed"
+        },
+    }
 }
 
 module.exports = commonConstants
