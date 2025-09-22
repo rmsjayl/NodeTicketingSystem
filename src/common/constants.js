@@ -1,6 +1,8 @@
 var commonConstants = {
     DATABASE_TABLES: {
         USER: "User ",
+        TICKET: "Ticket ",
+        CATEGORY: "Category ",
     },
     DATABASE_TABLE_CREATION: {
         SUCCESS: "Table created successfully.",
@@ -98,6 +100,19 @@ var commonConstants = {
         UPDATE_PASSWORD: "Update Password",
         FORGOT_PASSWORD: "Forgot Password",
         TICKET_DETAILS: "Ticket Details"
+    },
+
+    TICKET: {
+        PRIORITY: {
+            HIGH: "High",
+            MEDIUM: "Medium",
+            LOW: "Low"
+        },
+        STATUS: {
+            OPEN: "Open",
+            IN_PROGRESS: "In Progress",
+            CLOSED: "Closed"
+        },
     }
 }
 
