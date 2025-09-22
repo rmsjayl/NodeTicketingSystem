@@ -16,13 +16,23 @@ exports.getTickets = async (req, res) => {
                 {
                     model: Category,
                     as: "category",
-                    attributes: ["name", "details"]
+                    attributes: ["name"]
                 },
                 {
                     model: User,
                     as: "user",
                     attributes:["email"]
                 }
+            ],
+            attributes:[
+                "id",
+                "subject",
+                "description",
+                "priority",
+                "status",
+                "attachment",
+                "createdAt",
+                "updatedAt"
             ],
             order: [["createdAt", "DESC"]],
             limit,
