@@ -60,7 +60,10 @@ User.afterCreate(async (user) => {
     .then(() => console.log(commonConstants.USER.UPDATE.SUCCESS))
     .catch((error) => console.log(commonConstants.USER.UPDATE.FAILED + error.message));
 
-    await sendEmail(user.email, commonConstants.SEND_EMAIL.ACCOUNT_VERIFICATION)
+    await sendEmail(commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION,
+                    user.email, 
+                    commonConstants.SEND_EMAIL.ACCOUNT_VERIFICATION, 
+                    user)
     .then(() => console.log(commonConstants.USER.SEND_EMAIL_VERIFICATION.SUCCESS))
     .catch((error) => commonConstants.USER.SEND_EMAIL_VERIFICATION.FAILED + error.message);
 });

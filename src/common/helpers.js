@@ -2,6 +2,9 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto-js");
 const jwt = require("jsonwebtoken");
 const commonConstants = require("./constants");
+const fs = require("fs");
+const path = require("path");
+const Handlebars = require("handlebars");
 
 const commonHelpers = {
     passwordHasher: function (password) {
@@ -41,6 +44,22 @@ const commonHelpers = {
     generateRefreshToken: function (email) {
         return jwt.sign({ email }, process.env.JWT_SECRET, {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+        });
+    },
+    generateEmailContent: function (templatePath, user, type) {
+        const emailPath = path.join(__dirname, templatePath);
+        const source = fs.readFileSync(emailPath, "utf8");
+        const template = Handlebars.compile(source);
+
+        const urlMap = {
+            [commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION]: `/verifyaccount/${user.id}/token/${user.accountVerificationToken}`,
+        }
+
+        return template({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            url: `${process.env.BASE_URL}${urlMap[type]}`,
         });
     }
 }
