@@ -57,20 +57,20 @@ User.afterCreate(async (user) => {
         accountVerficationToken: token,
         accountVerificationExpiry: expires,
     })
-    .then(() => console.log(commonConstants.USER.UPDATE.SUCCESS))
-    .catch((error) => console.log(commonConstants.USER.UPDATE.FAILED + error.message));
+        .then(() => console.log(commonConstants.USER.UPDATE.SUCCESS))
+        .catch((error) => console.log(commonConstants.USER.UPDATE.FAILED + error.message));
 
     await sendEmail(user.email, commonConstants.SEND_EMAIL.ACCOUNT_VERIFICATION)
-    .then(() => console.log(commonConstants.USER.SEND_EMAIL_VERIFICATION.SUCCESS))
-    .catch((error) => commonConstants.USER.SEND_EMAIL_VERIFICATION.FAILED + error.message);
+        .then(() => console.log(commonConstants.USER.SEND_EMAIL_VERIFICATION.SUCCESS))
+        .catch((error) => commonConstants.USER.SEND_EMAIL_VERIFICATION.FAILED + error.message);
 });
 
 User.sync({ alter: true })
-  .then(() => {
-    console.log(commonConstants.DATABASE_TABLES.USER + commonConstants.DATABASE_TABLE_CREATION.SUCCESS);
-  })
-  .catch((error) => {
-    console.error(`${commonConstants.DATABASE_TABLES.USER} ${commonConstants.DATABASE_CONNECTION.ERROR} ${error}`);
-  });
+    .then(() => {
+        console.log(commonConstants.DATABASE_TABLES.USER + commonConstants.DATABASE_TABLE_CREATION.SUCCESS);
+    })
+    .catch((error) => {
+        console.error(`${commonConstants.DATABASE_TABLES.USER} ${commonConstants.DATABASE_CONNECTION.ERROR} ${error.message}`);
+    });
 
 module.exports = User

@@ -12,19 +12,12 @@ const Ticket = sequelize.define("Ticket", {
     },
     userId: {
         type: DataTypes.UUID,
-        allowNull: false,
         references: {
             model: User,
             key: 'id'
         }
     },
-    subject:
-    {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    categoryId:
-    {
+    categoryId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
@@ -32,41 +25,52 @@ const Ticket = sequelize.define("Ticket", {
             key: 'id'
         }
     },
-    description:{
+    subject: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    description: {
         type: DataTypes.STRING,
         allowNull: true,
     },
     priority: {
         type: DataTypes.ENUM(
-            commonConstants.TICKET.PRIORITY.HIGH, 
-            commonConstants.TICKET.PRIORITY.MEDIUM, 
+            commonConstants.TICKET.PRIORITY.HIGH,
+            commonConstants.TICKET.PRIORITY.MEDIUM,
             commonConstants.TICKET.PRIORITY.LOW),
         allowNull: false,
     },
     status: {
         type: DataTypes.ENUM(
-            commonConstants.TICKET.STATUS.OPEN, 
-            commonConstants.TICKET.STATUS.IN_PROGRESS, 
+            commonConstants.TICKET.STATUS.OPEN,
+            commonConstants.TICKET.STATUS.IN_PROGRESS,
             commonConstants.TICKET.STATUS.CLOSED),
         allowNull: false,
     },
-    attachment:{
+    attachment: {
         type: DataTypes.STRING,
         allowNull: true,
     }
-},{
+}, {
     timestamps: true,
 });
 
-Ticket.belongsTo(User, { foreignKey: 'userId' });
-Ticket.belongsTo(Category, { foreignKey: 'categoryId' });
+User.hasMany(Ticket, {
+    foreignKey: "ticketId",
+    as: "tickets,"
+});
+
+Ticket.belongsTo(Category, {
+    foreignKey: "categoryId",
+    as: "category"
+})
 
 Ticket.sync({ alter: true })
-  .then(() => {
-    console.log(commonConstants.DATABASE_TABLES.TICKET + commonConstants.DATABASE_TABLE_CREATION.SUCCESS);
-  })
-  .catch((error) => {
-    console.error(`${commonConstants.DATABASE_TABLES.TICKET} ${commonConstants.DATABASE_CONNECTION.ERROR} ${error}`);
-  });
+    .then(() => {
+        console.log(commonConstants.DATABASE_TABLES.TICKET + commonConstants.DATABASE_TABLE_CREATION.SUCCESS);
+    })
+    .catch((error) => {
+        console.error(`${commonConstants.DATABASE_TABLES.TICKET} ${commonConstants.DATABASE_CONNECTION.ERROR} ${error.message}`);
+    });
 
 module.exports = Ticket;
