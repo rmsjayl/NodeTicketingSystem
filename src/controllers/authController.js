@@ -48,6 +48,7 @@ exports.register = async (req, res) => {
             firstName: firstName,
             lastName: lastName,
             email: email,
+            username: username,
             password: commonHelpers.passwordHasher(password),
             roles: roles
         });
