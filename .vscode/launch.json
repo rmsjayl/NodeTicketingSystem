@@ -5,7 +5,7 @@
       "type": "node",
       "request": "launch",
       "name": "Debug Express Server",
-      "program": "${workspaceFolder}/src/utilities/server.js",
+      "program": "${workspaceFolder}/src/server.js",
       "skipFiles": ["<node_internals>/**"],
       "env": {
         "NODE_ENV": "development"
