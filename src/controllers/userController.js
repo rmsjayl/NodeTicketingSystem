@@ -26,7 +26,7 @@ exports.getUsers = async (req, res) => {
 
         if (count == 0) {
             return res.status(commonConstants.STATUS_CODE.ACCEPTED).json({
-                success: false,
+                success: true,
                 message: commonConstants.USER.RETRIEVE.NOT_FOUND
             });
         }
@@ -63,11 +63,13 @@ exports.deleteUsers = async (req, res) => {
             })
         }
 
+        await user.destroy();
+
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,
-            message: commonConstants.USER.RETRIEVE.SUCCESS
+            message: commonConstants.USER.DELETE.SUCCESS,
+            data: user
         })
-
 
     } catch (error) {
         return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
