@@ -1,0 +1,87 @@
+const commonHelpers = require("../common/helpers");
+const commonConstants = require("../common/constants");
+const Category  = require("../models/category"); // Import models from index.js
+
+exports.createCategory = async (req, res) => {
+
+    const { name, details } = req.body;
+
+    try {
+
+        const payload = { name, details };
+        const validationError = commonHelpers.payloadValidation(payload);
+
+        if (validationError) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: validationError
+            });
+        }
+
+        const newCategory = await Category.create({
+            name: name, // Use the found user's ID
+            details: details,
+        });
+
+        return res.status(commonConstants.STATUS_CODE.CREATED).json({
+            success: true,
+            message: "Category created successfully.",
+            category: newCategory
+        });
+
+
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+            success: false,
+            message: commonConstants.USER.RETRIEVE.FAILED + error.message
+        })
+    }
+}
+
+exports.getCategories = async (req, res) => {
+     try {
+        const page = parseInt(req.query.page) || commonConstants.PAGINATION.PAGE;
+        const limit = parseInt(req.query.limit) || commonConstants.PAGINATION.LIMIT;
+        const offset = (page - 1) * limit;
+    
+
+        const { count, rows } = await Category.findAndCountAll({
+            order: [["createdAt", "DESC"]],
+            limit,
+            offset
+        });
+
+        const totalPage = Math.ceil(count / limit);
+
+        if (page > totalPage && totalPage > 0) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.PAGINATION.INVALID_PAGE_NUMBER + totalPage
+            })
+        }
+
+        if (count == 0) {
+            return res.status(commonConstants.STATUS_CODE.ACCEPTED).json({
+                success: false,
+                message: commonConstants.USER.RETRIEVE.NOT_FOUND
+            });
+        }
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.USER.RETRIEVE.SUCCESS,
+            totalRecords: count,
+            pagination: {
+                page: `${page} out of ${totalPage}`,
+                limit: limit,
+            },
+            categories: rows,
+        });
+
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+            success: false,
+            message: commonConstants.USER.RETRIEVE.FAILED + error.message
+        })
+    }
+}
