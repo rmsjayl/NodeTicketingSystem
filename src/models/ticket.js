@@ -2,7 +2,7 @@ const commonConstants = require("../common/constants");
 const sequelize = require("../database/db_conn");
 const { DataTypes } = require("sequelize");
 const User = require("../models/user");
-const Category = require("./category");
+const Category = require("../models/category");
 
 const Ticket = sequelize.define("Ticket", {
     id: {
@@ -13,7 +13,7 @@ const Ticket = sequelize.define("Ticket", {
     userId: {
         type: DataTypes.UUID,
         references: {
-            model: User,
+            model: User, // Use table name as a string
             key: 'id'
         }
     },
@@ -21,7 +21,7 @@ const Ticket = sequelize.define("Ticket", {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-            model: Category,
+            model: Category, // Use table name as a string
             key: 'id'
         }
     },
@@ -56,32 +56,5 @@ const Ticket = sequelize.define("Ticket", {
     timestamps: true,
 });
 
-User.hasMany(Ticket, {
-    foreignKey:"userId",
-    as:"tickets"
-});
-
-Ticket.belongsTo(Category, {
-    foreignKey: "categoryId",
-    as: "category"
-});
-
-Ticket.belongsTo(User, {
-    foreignKey: "userId",
-    as: "user"
-});
-
-Category.hasMany(Ticket, {
-    foreignKey: "categoryId",
-    as: "tickets"
-});
-
-Ticket.sync({ alter: true })
-    .then(() => {
-        console.log(commonConstants.DATABASE_TABLES.TICKET + commonConstants.DATABASE_TABLE_CREATION.SUCCESS);
-    })
-    .catch((error) => {
-        console.error(`${commonConstants.DATABASE_TABLES.TICKET} ${commonConstants.DATABASE_CONNECTION.ERROR} ${error.message}`);
-    });
 
 module.exports = Ticket;

@@ -20,13 +20,4 @@ const Category = sequelize.define("Category", {
   timestamps: true,
 });
 
-Category.sync({ alter: true })
-  .then(() => {
-    console.log(commonConstants.DATABASE_TABLES.CATEGORY + commonConstants.DATABASE_TABLE_CREATION.SUCCESS);
-  })
-  .catch((error) => {
-    console.error(`${commonConstants.DATABASE_TABLES.CATEGORY} ${commonConstants.DATABASE_CONNECTION.ERROR} ${error.message}`);
-  });
-
-
 module.exports = Category;
