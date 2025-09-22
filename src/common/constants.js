@@ -113,7 +113,14 @@ var commonConstants = {
             IN_PROGRESS: "In Progress",
             CLOSED: "Closed"
         },
-    }
+    },
+
+    TOKEN: {
+        NO_TOKEN: "Invalid request. No token provided.",
+        INVALID: "Invalid token. Please login token.",
+        UNAUTHORIZED: "Unauthorized request.",
+        TOKEN_EXPIRED: "Token has expired. Please log"
+    },
 }
 
 module.exports = commonConstants

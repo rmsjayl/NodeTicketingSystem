@@ -83,6 +83,7 @@ exports.createTicket = async (req, res) => {
         // 1. Validate payload
         const payload = { email, subject, description, priority, categoryId };
         const validationError = commonHelpers.payloadValidation(payload);
+
         if (validationError) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
@@ -101,10 +102,7 @@ exports.createTicket = async (req, res) => {
         }
 
         // 3. Check if the category exists
-
         const category = await Category.findByPk(categoryId);
-
-        // const findCategory = await Category.findOne({ where: { name: category }})
 
         if (!category) {
             return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
