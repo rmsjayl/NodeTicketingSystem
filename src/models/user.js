@@ -3,7 +3,6 @@ const commonHelpers = require("../common/helpers");
 const sequelize = require("../database/db_conn");
 const { DataTypes } = require("sequelize");
 const sendEmail = require("../utilities/sendEmail");
-const Ticket = require("./ticket")
 
 const User = sequelize.define("User", {
     id: {
@@ -50,11 +49,6 @@ const User = sequelize.define("User", {
     timestamps: true,
 });
 
-// Ticket.belongsTo(User, {
-//     foreignKey: "id",
-//     as: ""
-// });
-
 User.afterCreate(async (user) => {
     const token = commonHelpers.generateRandomToken();
     const expires = Date.now() + 30 * 60 * 1000;
@@ -70,13 +64,5 @@ User.afterCreate(async (user) => {
         .then(() => console.log(commonConstants.USER.SEND_EMAIL_VERIFICATION.SUCCESS))
         .catch((error) => commonConstants.USER.SEND_EMAIL_VERIFICATION.FAILED + error.message);
 });
-
-User.sync({ alter: true })
-    .then(() => {
-        console.log(commonConstants.DATABASE_TABLES.USER + commonConstants.DATABASE_TABLE_CREATION.SUCCESS);
-    })
-    .catch((error) => {
-        console.error(`${commonConstants.DATABASE_TABLES.USER} ${commonConstants.DATABASE_CONNECTION.ERROR} ${error.message}`);
-    });
 
 module.exports = User
