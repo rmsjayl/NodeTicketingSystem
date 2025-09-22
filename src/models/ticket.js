@@ -1,7 +1,7 @@
 const commonConstants = require("../common/constants");
 const sequelize = require("../database/db_conn");
 const { DataTypes } = require("sequelize");
-const User = require("./user");
+const User = require("../models/user");
 const Category = require("./category");
 
 const Ticket = sequelize.define("Ticket", {
@@ -45,6 +45,7 @@ const Ticket = sequelize.define("Ticket", {
             commonConstants.TICKET.STATUS.OPEN,
             commonConstants.TICKET.STATUS.IN_PROGRESS,
             commonConstants.TICKET.STATUS.CLOSED),
+        defaultValue: commonConstants.TICKET.STATUS.OPEN,
         allowNull: false,
     },
     attachment: {
@@ -56,14 +57,24 @@ const Ticket = sequelize.define("Ticket", {
 });
 
 User.hasMany(Ticket, {
-    foreignKey: "ticketId",
-    as: "tickets,"
+    foreignKey:"userId",
+    as:"tickets"
 });
 
 Ticket.belongsTo(Category, {
     foreignKey: "categoryId",
     as: "category"
-})
+});
+
+Ticket.belongsTo(User, {
+    foreignKey: "userId",
+    as: "user"
+});
+
+Category.hasMany(Ticket, {
+    foreignKey: "categoryId",
+    as: "tickets"
+});
 
 Ticket.sync({ alter: true })
     .then(() => {
