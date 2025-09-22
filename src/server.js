@@ -7,6 +7,8 @@ require("./utilities/passport"); // register strategy
 const sequelize = require("./database/db_conn");
 
 const User = require("./models/user");
+const Ticket = require("./models/ticket");
+const Category = require("./models/category");
 
 const commonConstants = require("./common/constants");
 const authRoutes = require("./routes/authRoutes");
