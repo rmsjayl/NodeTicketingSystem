@@ -55,6 +55,10 @@ var commonConstants = {
             SUCCESS: "User updated successfully.",
             FAILED: "Unable to update user. "
         },
+        DELETE: {
+            SUCCESS: "User deleted successfully.",
+            FAILED: "Unable to delete user. "
+        },
         SEND_EMAIL_VERIFICATION: {
             SUCCESS: "User account creation was sent to user's email.",
             FAILED: "Unable to send email upon creation. "
@@ -70,7 +74,7 @@ var commonConstants = {
             AUTHENTICATION: {
                 FAILED: "Error during Google authentication: "
             },
-            CREDENTIAL:{
+            CREDENTIAL: {
                 DEFAULT_USER_PASSWORD: "google",
                 DEFAULT_USER_ROLE: "user"
             }
@@ -87,6 +91,14 @@ var commonConstants = {
         FAILED: "Email failed to send. ",
         ACCOUNT_VERIFICATION: "Account Verification",
     },
+
+    EMAIL_TYPES: {
+        ACCOUNT_VERIFICATION: "Account Verification",
+        REQUEST_TOKEN: "Request Token",
+        UPDATE_PASSWORD: "Update Password",
+        FORGOT_PASSWORD: "Forgot Password",
+        TICKET_DETAILS: "Ticket Details"
+    }
 }
 
 module.exports = commonConstants
