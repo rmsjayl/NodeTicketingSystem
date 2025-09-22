@@ -3,7 +3,6 @@ const commonHelpers = require("../common/helpers");
 const sequelize = require("../database/db_conn");
 const { DataTypes } = require("sequelize");
 const sendEmail = require("../utilities/sendEmail");
-const Ticket = require("./ticket")
 
 const User = sequelize.define("User", {
     id: {
@@ -49,11 +48,6 @@ const User = sequelize.define("User", {
 }, {
     timestamps: true,
 });
-
-// Ticket.belongsTo(User, {
-//     foreignKey: "id",
-//     as: ""
-// });
 
 User.afterCreate(async (user) => {
     const token = commonHelpers.generateRandomToken();
