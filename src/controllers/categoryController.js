@@ -31,9 +31,9 @@ exports.createCategory = async (req, res) => {
 
 
     } catch (error) {
-        return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
             success: false,
-            message: commonConstants.USER.RETRIEVE.FAILED + error.message
+            message: error.message
         })
     }
 }
@@ -79,9 +79,9 @@ exports.getCategories = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
             success: false,
-            message: commonConstants.USER.RETRIEVE.FAILED + error.message
+            message: error.message
         })
     }
 }

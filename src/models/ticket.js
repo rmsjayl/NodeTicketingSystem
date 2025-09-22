@@ -56,5 +56,4 @@ const Ticket = sequelize.define("Ticket", {
     timestamps: true,
 });
 
-
 module.exports = Ticket;

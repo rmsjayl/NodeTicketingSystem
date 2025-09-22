@@ -1,4 +1,3 @@
-const commonConstants = require("../common/constants");
 const sequelize = require("../database/db_conn");
 const { DataTypes } = require("sequelize");
 
