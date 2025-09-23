@@ -103,6 +103,15 @@ var commonConstants = {
     },
 
     TICKET: {
+        RETRIEVE: {
+            SUCCESS: "Ticket retrieved successfully.",
+            FAILED: "Unable to retrieve ticket. ",
+            NOT_FOUND: "No tickets found."
+        },
+        CREATE: {
+            SUCCESS: "Ticket created successfully.",
+            FAILED: "Unable to create a ticket. "
+        },
         PRIORITY: {
             HIGH: "High",
             MEDIUM: "Medium",
@@ -112,6 +121,17 @@ var commonConstants = {
             OPEN: "Open",
             IN_PROGRESS: "In Progress",
             CLOSED: "Closed"
+        },
+    },
+    CATEGORY: {
+        RETRIEVE: {
+            SUCCESS: "Category retrieved successfully.",
+            FAILED: "Unable to retrieve category. ",
+            NOT_FOUND: "No categories found."
+        },
+        CREATE: {
+            SUCCESS: "Category created successfully.",
+            FAILED: "Unable to create a category. "
         },
     },
 
