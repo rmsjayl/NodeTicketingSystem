@@ -98,6 +98,13 @@ var commonConstants = {
         FAILED: "Invalid credentials. Please try again ..."
     },
 
+    VERIFICATION: {
+        SUCCESS: "User verified successfully.",
+        EXPIRED: "User not verified. Verification token has expired.",
+        INVALID: "Invalid credentials.",
+        ALREADY_VERIFIED: "User is alread verified"
+    },
+
     SEND_EMAIL: {
         SUCCESS: "Email sent successfully.",
         FAILED: "Email failed to send. ",
