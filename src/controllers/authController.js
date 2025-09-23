@@ -50,7 +50,7 @@ exports.register = async (req, res) => {
             email: email,
             username: username,
             password: commonHelpers.passwordHasher(password),
-            roles: roles
+            roles: commonHelpers.titleCase(roles)
         });
 
         const userResponse = {
