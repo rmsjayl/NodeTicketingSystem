@@ -17,6 +17,13 @@ const Ticket = sequelize.define("Ticket", {
             key: 'id'
         }
     },
+    assignedTo: {
+        type: DataTypes.UUID,
+        references: {
+            model: User, // Use table name as a string
+            key: 'id'
+        }
+    },
     categoryId: {
         type: DataTypes.UUID,
         allowNull: false,
