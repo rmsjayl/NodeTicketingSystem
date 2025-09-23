@@ -113,6 +113,10 @@ var commonConstants = {
             SUCCESS: "Ticket created successfully.",
             FAILED: "Unable to create a ticket. "
         },
+        UPDATE: {
+            SUCCESS: "Ticket updated successfully.",
+            FAILED: "Unable to update ticket. ",
+        },
         PRIORITY: {
             HIGH: "High",
             MEDIUM: "Medium",
@@ -123,6 +127,9 @@ var commonConstants = {
             IN_PROGRESS: "In Progress",
             CLOSED: "Closed"
         },
+        ERROR_MESSAGE: {
+            TICKET_ALREADY_CLOSED: "Ticket is already closed."
+        }
     },
     CATEGORY: {
         RETRIEVE: {

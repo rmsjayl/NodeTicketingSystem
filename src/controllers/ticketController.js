@@ -159,3 +159,37 @@ exports.createTicket = async (req, res) => {
         })
     }
 }
+
+exports.closeTicket = async (req, res) => {
+    const ticketId = req.params.id;
+
+    try {
+        const ticket = await Ticket.findByPk(ticketId);
+        if (!ticket) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.TICKET.RETRIEVE.FAILED
+            })
+        }
+        if (ticket.status == commonConstants.TICKET.STATUS.CLOSED) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.TICKET.UPDATE.FAILED + 
+                         commonConstants.TICKET.ERROR_MESSAGE.TICKET_ALREADY_CLOSED
+            })
+        }
+        await ticket.update({
+            status: commonConstants.TICKET.STATUS.CLOSED,
+        });
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.TICKET.UPDATE.SUCCESS,
+            data: ticket
+        })
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
