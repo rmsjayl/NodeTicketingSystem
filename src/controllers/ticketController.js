@@ -75,6 +75,31 @@ exports.getTickets = async (req, res) => {
 
 }
 
+exports.getTicketById = async (req, res) => {
+    const ticketId = req.params.id;
+
+    try {
+        const ticket = await Ticket.findByPk(ticketId);
+        if (!ticket) {
+            return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
+                success: false,
+                message: commonConstants.TICKET.RETRIEVE.FAILED
+            })
+        }
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.TICKET.RETRIEVE.SUCCESS,
+            data: ticket
+        })
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 exports.createTicket = async (req, res) => {
 
     const { email, subject, description, priority, categoryId, attachment } = req.body;

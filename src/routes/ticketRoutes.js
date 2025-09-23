@@ -2,11 +2,13 @@ const express = require("express");
 const router = express.Router();
 
 const { authenticate } = require("../middlewares/authentication")
-const { createTicket, getTickets } = require("../controllers/ticketController");
+const { createTicket, getTickets, getTicketById } = require("../controllers/ticketController");
 
 router
     .route("/")
-    .post(authenticate, createTicket)
-    .get(authenticate, getTickets);
+    .post(createTicket)
+    .get(getTickets);
+router.route("/:id")
+    .get(getTicketById)
 
 module.exports = router;
