@@ -18,7 +18,7 @@ const authenticate = async (req, res, next) => {
     };
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: true });
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         if (decoded.exp < Date.now() / 1000) {
             return res.status(commonConstants.STATUS_CODE.UNAUTHORIZED).json({
@@ -46,4 +46,17 @@ const authenticate = async (req, res, next) => {
     }
 }
 
-module.exports = { authenticate };
+const authorizeRoles = (roles) => (req, res, next) => {
+
+    if(!req.user || !roles.includes(req.user.roles)){
+        return res.status(commonConstants.STATUS_CODE.FORBIDDEN).json({
+            success: false,
+            message: commonConstants.USER.AUTHORIZATION.UNAUTHORIZED,
+        });
+    }
+
+    next();
+
+}
+
+module.exports = { authenticate, authorizeRoles };
