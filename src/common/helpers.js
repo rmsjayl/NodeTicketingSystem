@@ -57,7 +57,7 @@ const commonHelpers = {
         const template = Handlebars.compile(source);
 
         const urlMap = {
-            [commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION]: `/verifyaccount/${user.id}/token/${user.accountVerificationToken}`,
+            [commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION]: `api/auth/verify/${user.id}/token/${user.accountVerficationToken}`,
         }
 
         return template({
