@@ -112,9 +112,13 @@ exports.login = async (req, res) => {
             });
         }
 
+        const accessToken = commonHelpers.generateAccessToken(user.id, user.roles);
+
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,
             message: commonConstants.LOGIN.SUCCESS,
+            user: user,
+            token: accessToken
         })
 
     } catch (error) {
@@ -170,7 +174,7 @@ exports.googleCallback = (req, res, next) => {
             }
 
             // Generate application access and refresh tokens (JWTs)
-            const accessTokenJWT = commonHelpers.generateAccessToken(email);
+            const accessTokenJWT = commonHelpers.generateEmailAccessToken(email);
 
             const refreshTokenJWT = commonHelpers.generateRefreshToken(email);
 
