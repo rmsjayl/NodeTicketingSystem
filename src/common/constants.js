@@ -55,7 +55,8 @@ var commonConstants = {
         },
         UPDATE: {
             SUCCESS: "User updated successfully.",
-            FAILED: "Unable to update user. "
+            FAILED: "Unable to update user. ",
+            NO_CHANGE: "No changes were applied."
         },
         DELETE: {
             SUCCESS: "User deleted successfully.",
