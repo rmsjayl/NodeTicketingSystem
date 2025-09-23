@@ -10,6 +10,7 @@ exports.getTickets = async (req, res) => {
         const page = parseInt(req.query.page) || commonConstants.PAGINATION.PAGE;
         const limit = parseInt(req.query.limit) || commonConstants.PAGINATION.LIMIT;
         const offset = (page - 1) * limit;
+        const status = req.query.status || commonConstants.TICKET.STATUS.OPEN;
 
         const { count, rows } = await Ticket.findAndCountAll({
             include: [
@@ -36,7 +37,10 @@ exports.getTickets = async (req, res) => {
             ],
             order: [["createdAt", "DESC"]],
             limit,
-            offset
+            offset,
+            where: {
+                status: commonHelpers.titleCase(status)
+            }
         });
 
         const totalPage = Math.ceil(count / limit);

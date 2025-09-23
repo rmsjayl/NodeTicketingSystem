@@ -61,7 +61,21 @@ const commonHelpers = {
             username: user.username,
             url: `${process.env.BASE_URL}${urlMap[type]}`,
         });
-    }
+    },
+    titleCase: function (str) {
+        if (!str) {
+            return "";
+        }
+
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(function(word) {
+            // For each word, capitalize the first letter and concatenate with the rest in lowercase
+                return word.charAt(0).toUpperCase() + word.slice(1);
+            })
+            .join(' '); // Join the words back into a single string with spaces
+    },
 }
 
 module.exports = commonHelpers;
