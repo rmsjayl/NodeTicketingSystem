@@ -40,7 +40,8 @@ syncModels();
 
 // User <-> Ticket (One-to-Many)
 User.hasMany(Ticket, { foreignKey: 'userId', as: 'tickets' });
-Ticket.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+Ticket.belongsTo(User, { foreignKey: 'userId', as: 'userCreatedTicket' });
+Ticket.belongsTo(User, { foreignKey: 'assignedTo', as: 'assignedToUser' });
 
 // Category <-> Ticket (One-to-Many)
 Category.hasMany(Ticket, { foreignKey: 'categoryId', as: 'tickets' });
