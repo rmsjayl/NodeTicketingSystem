@@ -81,6 +81,15 @@ var commonConstants = {
                 DEFAULT_USER_PASSWORD: "google",
                 DEFAULT_USER_ROLE: "user"
             }
+        },
+        AUTHORIZATION:{
+            AUTHORIZED: "Please proceed user has been authorized.",
+            UNAUTHORIZED: "User is not authorized to access."
+        },
+        ROLES: {
+            SUPER_ADMIN: "Super Admin", // Create, Read, Update, Delete
+            ADMIN: "Admin", // Read, Update (Assign)
+            AGENT:"Agent" // Create, Read
         }
     },
 
@@ -145,7 +154,7 @@ var commonConstants = {
 
     TOKEN: {
         NO_TOKEN: "Invalid request. No token provided.",
-        INVALID: "Invalid token. Please login token.",
+        INVALID: "Invalid token. Please login again.",
         UNAUTHORIZED: "Unauthorized request.",
         TOKEN_EXPIRED: "Token has expired. Please log"
     },
