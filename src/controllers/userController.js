@@ -1,3 +1,4 @@
+const req = require("express/lib/request");
 const commonConstants = require("../common/constants");
 const commonHelpers = require("../common/helpers");
 const User = require("../models/user")
@@ -7,7 +8,7 @@ exports.getUsers = async (req, res) => {
         const page = parseInt(req.query.page) || commonConstants.PAGINATION.PAGE;
         const limit = parseInt(req.query.limit) || commonConstants.PAGINATION.LIMIT;
         const offset = (page - 1) * limit;
-    
+
 
         const { count, rows } = await User.findAndCountAll({
             order: [["createdAt", "DESC"]],
@@ -76,5 +77,59 @@ exports.deleteUsers = async (req, res) => {
             success: false,
             message: error.message
         });
+    }
+}
+
+exports.updateUser = async (req, res) => {
+    const id = req.params.id;
+    const { firstName, lastName, role, username } = req.body;
+
+    try {
+
+        const payload = { firstName, lastName, role, username };
+        const validatedInputs = commonHelpers.payloadValidation(payload);
+
+        if (validatedInputs) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: validatedInputs
+            });
+        }
+
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.USER.RETRIEVE.FAILED
+            });
+        }
+
+        if (user.firstName === firstName && user.lastName === lastName && user.roles === role && user.username === username) {
+            return res.status(commonConstants.STATUS_CODE.ACCEPTED).json({
+                success: true,
+                message: commonConstants.USER.UPDATE.NO_CHANGE
+            });
+        }
+
+        await user.update({
+            firstName: firstName,
+            lastName: lastName,
+            roles: role,
+            username: username
+        });
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.USER.UPDATE.SUCCESS,
+            data: user
+        });
+
+
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message
+        })
     }
 }
