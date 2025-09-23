@@ -50,14 +50,14 @@ exports.getTickets = async (req, res) => {
 
         if (count == 0) {
             return res.status(commonConstants.STATUS_CODE.ACCEPTED).json({
-                success: false,
-                message: commonConstants.USER.RETRIEVE.NOT_FOUND
+                success: true,
+                message: commonConstants.TICKET.RETRIEVE.NOT_FOUND
             });
         }
 
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,
-            message: commonConstants.USER.RETRIEVE.SUCCESS,
+            message: commonConstants.TICKET.RETRIEVE.SUCCESS,
             totalRecords: count,
             pagination: {
                 page: `${page} out of ${totalPage}`,
@@ -97,7 +97,7 @@ exports.createTicket = async (req, res) => {
         if (!user) {
             return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
                 success: false,
-                message: "User with the provided email not found."
+                message: commonConstants.USER.RETRIEVE.NOT_FOUND
             });
         }
 
@@ -107,7 +107,7 @@ exports.createTicket = async (req, res) => {
         if (!category) {
             return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
                 success: false,
-                message: "Category not found."
+                message: commonConstants.CATEGORY.RETRIEVE.NOT_FOUND
             });
         }
 
@@ -123,7 +123,7 @@ exports.createTicket = async (req, res) => {
 
         return res.status(commonConstants.STATUS_CODE.CREATED).json({
             success: true,
-            message: "Ticket created successfully.",
+            message: commonConstants.TICKET.CREATE.SUCCESS,
             ticket: newTicket
         });
 

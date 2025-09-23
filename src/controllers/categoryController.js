@@ -25,7 +25,7 @@ exports.createCategory = async (req, res) => {
 
         return res.status(commonConstants.STATUS_CODE.CREATED).json({
             success: true,
-            message: "Category created successfully.",
+            message: commonConstants.CATEGORY.CREATE.SUCCESS,
             category: newCategory
         });
 
@@ -63,13 +63,13 @@ exports.getCategories = async (req, res) => {
         if (count == 0) {
             return res.status(commonConstants.STATUS_CODE.ACCEPTED).json({
                 success: false,
-                message: commonConstants.USER.RETRIEVE.NOT_FOUND
+                message: commonConstants.CATEGORY.RETRIEVE.NOT_FOUND
             });
         }
 
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,
-            message: commonConstants.USER.RETRIEVE.SUCCESS,
+            message: commonConstants.CATEGORY.RETRIEVE.SUCCESS,
             totalRecords: count,
             pagination: {
                 page: `${page} out of ${totalPage}`,
