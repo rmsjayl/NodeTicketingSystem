@@ -36,8 +36,13 @@ const commonHelpers = {
     generateRandomToken: function () {
         return crypto.lib.WordArray.random(16).toString(crypto.enc.Hex);
     },
-    generateAccessToken: function (email) {
+    generateEmailAccessToken: function (email) {
         return jwt.sign({ email }, process.env.JWT_SECRET, {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
+        });
+    },
+    generateAccessToken: function (id, roles) {
+        return jwt.sign({ id, roles }, process.env.JWT_SECRET, {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
         });
     },
