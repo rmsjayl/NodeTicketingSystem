@@ -51,6 +51,33 @@ exports.getUsers = async (req, res) => {
     }
 }
 
+exports.getUserById = async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await User.findOne({ where: { id: userId } })
+
+        if (!user) {
+            return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
+                success: false,
+                message: commonConstants.USER.RETRIEVE.FAILED
+            })
+        }
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.USER.RETRIEVE.SUCCESS,
+            data: user
+        })
+        
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
+
 exports.deleteUsers = async (req, res) => {
     const id = req.params.id;
 
