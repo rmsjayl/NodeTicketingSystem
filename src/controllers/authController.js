@@ -129,6 +129,52 @@ exports.login = async (req, res) => {
     }
 };
 
+exports.accountVerification = async (req, res) => {
+    const {id, token} = req.params;
+    try {
+        const user = await User.findOne({ where: { id: id, accountVerficationToken: token } });
+        const now = Date.now();
+    
+        if (!user) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.VERIFICATION.INVALID,
+            })
+        }
+    
+        if (now > user.accountVerificationExpiry) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.VERIFICATION.EXPIRED,
+            })
+        }
+    
+        if (user.isVerified) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.VERIFICATION.ALREADY_VERIFIED,
+            })
+        }
+    
+        await user.update({
+            isVerified: true,
+            dateVerified: now,
+            accountVerficationToken: null,
+            accountVerificationExpiry: null,
+        });
+    
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.VERIFICATION.SUCCESS,
+        })
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
+
 exports.resetPassword = async (req, res) => {
     res.send("Reset password route is working ...");
 };
