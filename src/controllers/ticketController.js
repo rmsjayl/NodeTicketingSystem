@@ -3,6 +3,8 @@ const commonConstants = require("../common/constants");
 const User = require("../models/user");
 const Category = require("../models/category");
 const Ticket = require("../models/ticket");
+const { Sequelize } = require('sequelize')
+
 
 exports.getTickets = async (req, res) => {
 
@@ -21,12 +23,24 @@ exports.getTickets = async (req, res) => {
                 },
                 {
                     model: User,
-                    as: "user",
-                    attributes:["email"]
+                    as: "userCreatedTicket", // User who created the ticket
+                    attributes: [
+                        "email",
+                        [Sequelize.literal(`"userCreatedTicket"."firstName" || ' ' || "userCreatedTicket"."lastName"`), "fullName"]
+                    ]
+                },
+                {
+                    model: User,
+                    as: "assignedToUser", // User assigned ticket
+                    attributes: [
+                        "email",
+                        [Sequelize.literal(`"assignedToUser"."firstName" || ' ' || "assignedToUser"."lastName"`), "fullName"]
+                    ]
                 }
             ],
-            attributes:[
+            attributes: [
                 "id",
+                "assignedTo",
                 "subject",
                 "description",
                 "priority",
@@ -106,11 +120,11 @@ exports.getTicketById = async (req, res) => {
 
 exports.createTicket = async (req, res) => {
 
-    const { email, subject, description, priority, categoryId, attachment } = req.body;
+    const { assignedTo, email, subject, description, priority, categoryId, attachment } = req.body;
 
     try {
         // 1. Validate payload
-        const payload = { email, subject, description, priority, categoryId };
+        const payload = { assignedTo, email, subject, description, priority, categoryId };
         const validationError = commonHelpers.payloadValidation(payload);
 
         if (validationError) {
@@ -143,6 +157,7 @@ exports.createTicket = async (req, res) => {
         // 4. Create the ticket
         const newTicket = await Ticket.create({
             userId: user.id, // Use the found user's ID
+            assignedTo: assignedTo,
             subject: subject,
             description: description,
             priority: priority,
@@ -178,8 +193,8 @@ exports.closeTicket = async (req, res) => {
         if (ticket.status == commonConstants.TICKET.STATUS.CLOSED) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
-                message: commonConstants.TICKET.UPDATE.FAILED + 
-                         commonConstants.TICKET.ERROR_MESSAGE.TICKET_ALREADY_CLOSED
+                message: commonConstants.TICKET.UPDATE.FAILED +
+                    commonConstants.TICKET.ERROR_MESSAGE.TICKET_ALREADY_CLOSED
             })
         }
         await ticket.update({
