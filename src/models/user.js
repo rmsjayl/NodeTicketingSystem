@@ -61,11 +61,11 @@ User.afterCreate(async (user) => {
         .catch((error) => console.log(commonConstants.USER.UPDATE.FAILED + error.message));
 
     await sendEmail(commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION,
-                    user.email, 
-                    commonConstants.SEND_EMAIL.ACCOUNT_VERIFICATION, 
-                    user)
-    .then(() => console.log(commonConstants.USER.SEND_EMAIL_VERIFICATION.SUCCESS))
-    .catch((error) => commonConstants.USER.SEND_EMAIL_VERIFICATION.FAILED + error.message);
+        user.email,
+        commonConstants.SEND_EMAIL.ACCOUNT_VERIFICATION,
+        user)
+        .then(() => console.log(commonConstants.USER.SEND_EMAIL_VERIFICATION.SUCCESS))
+        .catch((error) => commonConstants.USER.SEND_EMAIL_VERIFICATION.FAILED + error.message);
 });
 
 module.exports = User
