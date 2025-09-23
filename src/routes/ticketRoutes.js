@@ -22,7 +22,8 @@ router
         authorizeRoles(
             [
                 commonConstants.USER.ROLES.ADMIN,
-                commonConstants.USER.ROLES.SUPER_ADMIN
+                commonConstants.USER.ROLES.SUPER_ADMIN,
+                commonConstants.USER.ROLES.AGENT
             ]
         ),
         getTickets
