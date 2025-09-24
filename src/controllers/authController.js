@@ -4,6 +4,7 @@ const User = require("../models/user");
 const Token = require("../models/token");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const { sendTemplateEmail } = require("../utilities/sendEmail");
 
 exports.register = async (req, res) => {
     const { firstName, lastName, email, password, roles, username } = req.body;
@@ -206,7 +207,6 @@ exports.forgotPassword = async (req, res) => {
         const { email } = req.body;
 
         const user = await User.findOne({ where: { email: email } });
-
         if (!user) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
@@ -214,16 +214,25 @@ exports.forgotPassword = async (req, res) => {
             });
         }
 
-        await Token.create({
+        const token = await Token.create({
             userId: user.id,
             token: commonHelpers.generateRandomToken(),
             type: commonConstants.TOKEN.TYPE.FORGOT_PASSWORD,
             dateExpire: Date.now() + 30 * 60 * 1000
         });
+        const resetPasswordUrl = `${process.env.BASE_URL}/api/auth/resetPassword/${token.token}`
 
-        
+        sendTemplateEmail(
+            user.email,
+            commonConstants.EMAIL_TYPES.FORGOT_PASSWORD,
+            commonConstants.EMAIL_TYPES.FORGOT_PASSWORD,
+            { resetPasswordUrl: resetPasswordUrl }
+        )
 
-        res.send("Forgot password route is working ...");
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.SEND_EMAIL.SUCCESS,
+        });
     } catch (error) {
         return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
             success: false,

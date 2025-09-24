@@ -2,7 +2,7 @@ const commonConstants = require("../common/constants");
 const commonHelpers = require("../common/helpers");
 const sequelize = require("../database/db_conn");
 const { DataTypes } = require("sequelize");
-const sendEmail = require("../utilities/sendEmail");
+const { sendEmail } = require("../utilities/sendEmail");
 
 const User = sequelize.define("User", {
     id: {

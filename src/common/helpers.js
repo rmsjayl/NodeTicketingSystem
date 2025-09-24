@@ -68,6 +68,15 @@ const commonHelpers = {
             url: `${process.env.BASE_URL}${urlMap[type]}`,
         });
     },
+    generateEmailFromTemplate: function (templatePath, user, data) {
+        const fullTemplatePath = path.join(__dirname, templatePath);
+        const source = fs.readFileSync(fullTemplatePath, "utf8");
+        const template = Handlebars.compile(source);
+        return template({
+            data: data,
+            user: user,
+        });
+    },
     titleCase: function (str) {
         if (!str) {
             return "";
