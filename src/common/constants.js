@@ -3,6 +3,7 @@ var commonConstants = {
         USER: "User ",
         TICKET: "Ticket ",
         CATEGORY: "Category ",
+        TOKEN: "Token ",
     },
     DATABASE_TABLE_CREATION: {
         SUCCESS: "Table created successfully.",
@@ -160,6 +161,10 @@ var commonConstants = {
     },
 
     TOKEN: {
+        TYPE: {
+            ACCOUNT_VERIFICATION: "Account Verification",
+            FORGOT_PASSWORD: "Forgot Password"
+        },
         NO_TOKEN: "Invalid request. No token provided.",
         INVALID: "Invalid token. Please login again.",
         UNAUTHORIZED: "Unauthorized request.",

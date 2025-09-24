@@ -58,6 +58,7 @@ const commonHelpers = {
 
         const urlMap = {
             [commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION]: `api/auth/verify/${user.id}/token/${user.accountVerficationToken}`,
+            [commonConstants.EMAIL_TYPES.FORGOT_PASSWORD]: `api/auth/resetPassword/`
         }
 
         return template({

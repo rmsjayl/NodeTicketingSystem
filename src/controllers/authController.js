@@ -1,6 +1,7 @@
 const commonConstants = require("../common/constants");
 const commonHelpers = require("../common/helpers");
 const User = require("../models/user");
+const Token = require("../models/token");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
@@ -130,39 +131,39 @@ exports.login = async (req, res) => {
 };
 
 exports.accountVerification = async (req, res) => {
-    const {id, token} = req.params;
+    const { id, token } = req.params;
     try {
         const user = await User.findOne({ where: { id: id, accountVerficationToken: token } });
         const now = Date.now();
-    
+
         if (!user) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
                 message: commonConstants.VERIFICATION.INVALID,
             })
         }
-    
+
         if (now > user.accountVerificationExpiry) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
                 message: commonConstants.VERIFICATION.EXPIRED,
             })
         }
-    
+
         if (user.isVerified) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
                 message: commonConstants.VERIFICATION.ALREADY_VERIFIED,
             })
         }
-    
+
         await user.update({
             isVerified: true,
             dateVerified: now,
             accountVerficationToken: null,
             accountVerificationExpiry: null,
         });
-    
+
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,
             message: commonConstants.VERIFICATION.SUCCESS,
@@ -176,6 +177,22 @@ exports.accountVerification = async (req, res) => {
 }
 
 exports.resetPassword = async (req, res) => {
+
+    try {
+
+        const { currentPassword, newPassword } = req.body;
+
+
+
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message,
+        });
+    }
+
+
+
     res.send("Reset password route is working ...");
 };
 
@@ -184,7 +201,36 @@ exports.updatePassword = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res) => {
-    res.send("Forgot password route is working ...");
+
+    try {
+        const { email } = req.body;
+
+        const user = await User.findOne({ where: { email: email } });
+
+        if (!user) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.USER.RETRIEVE.NOT_FOUND,
+            });
+        }
+
+        await Token.create({
+            userId: user.id,
+            token: commonHelpers.generateRandomToken(),
+            type: commonConstants.TOKEN.TYPE.FORGOT_PASSWORD,
+            dateExpire: Date.now() + 30 * 60 * 1000
+        });
+
+        
+
+        res.send("Forgot password route is working ...");
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message,
+        });
+    }
+
 };
 
 exports.googleCallback = (req, res, next) => {
@@ -224,7 +270,7 @@ exports.googleCallback = (req, res, next) => {
 
             const refreshTokenJWT = commonHelpers.generateRefreshToken(email);
 
-            
+
             return res.status(commonConstants.STATUS_CODE.OK).json({
                 success: true,
                 message: commonConstants.USER.GOOGLE.CREATE.SUCCESS,
