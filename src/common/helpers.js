@@ -58,6 +58,7 @@ const commonHelpers = {
 
         const urlMap = {
             [commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION]: `api/auth/verify/${user.id}/token/${user.accountVerficationToken}`,
+            [commonConstants.EMAIL_TYPES.FORGOT_PASSWORD]: `api/auth/resetPassword/`
         }
 
         return template({
@@ -65,6 +66,15 @@ const commonHelpers = {
             lastName: user.lastName,
             username: user.username,
             url: `${process.env.BASE_URL}${urlMap[type]}`,
+        });
+    },
+    generateEmailFromTemplate: function (templatePath, user, data) {
+        const fullTemplatePath = path.join(__dirname, templatePath);
+        const source = fs.readFileSync(fullTemplatePath, "utf8");
+        const template = Handlebars.compile(source);
+        return template({
+            data: data,
+            user: user,
         });
     },
     titleCase: function (str) {

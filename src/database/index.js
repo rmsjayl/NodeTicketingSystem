@@ -5,10 +5,11 @@ const commonConstants = require('../common/constants');
 const User = require('../models/user');
 const Category = require('../models/category');
 const Ticket = require('../models/ticket');
+const Token = require("../models/token");
 
 
 async function syncModels() {
-  
+
   await User.sync({ alter: true })
     .then(() => {
       console.log(commonConstants.DATABASE_TABLES.USER + commonConstants.DATABASE_TABLE_CREATION.SUCCESS);
@@ -32,6 +33,14 @@ async function syncModels() {
     .catch((error) => {
       console.error(`${commonConstants.DATABASE_TABLES.CATEGORY} ${commonConstants.DATABASE_CONNECTION.ERROR} ${error.message}`);
     });
+
+  await Token.sync({ alter: true })
+    .then(() => {
+      console.log(commonConstants.DATABASE_TABLES.TOKEN + commonConstants.DATABASE_TABLE_CREATION.SUCCESS);
+    })
+    .catch((error) => {
+      console.error(`${commonConstants.DATABASE_TABLES.TOKEN} ${commonConstants.DATABASE_CONNECTION.ERROR} ${error.message}`);
+    });
 }
 
 syncModels();
@@ -46,6 +55,9 @@ Ticket.belongsTo(User, { foreignKey: 'assignedTo', as: 'assignedToUser' });
 // Category <-> Ticket (One-to-Many)
 Category.hasMany(Ticket, { foreignKey: 'categoryId', as: 'tickets' });
 Ticket.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
+
+User.hasMany(Token, {foreignKey: 'userId', as: 'userToken'})
+Token.belongsTo(User, { foreignKey: 'userId', as: 'assignedToken' });
 
 
 // Export all models and the sequelize instance
