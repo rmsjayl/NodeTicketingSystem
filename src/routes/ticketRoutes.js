@@ -3,6 +3,7 @@ const router = express.Router();
 
 const { authenticate, authorizeRoles } = require("../middlewares/authentication")
 const upload = require("../middlewares/handleAttachments");
+const limitFileSize = require("../middlewares/limitFileSize");
 const validateImage = require("../middlewares/imageValidator");
 const { closeTicket, createTicket, getTickets, getTicketById } = require("../controllers/ticketController");
 const commonConstants = require("../common/constants");
@@ -12,7 +13,8 @@ router
     .post(
         authenticate,
         upload.single("attachment"),
-        validateImage, // <-- Add the new image validation middleware here
+        validateImage, 
+        limitFileSize,
         authorizeRoles(
             [
                 commonConstants.USER.ROLES.SUPER_ADMIN,
