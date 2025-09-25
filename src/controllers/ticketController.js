@@ -128,7 +128,7 @@ exports.getTicketById = async (req, res) => {
 
 exports.createTicket = async (req, res) => {
 
-    const { assignedTo, email, subject, description, priority, categoryId, attachment } = req.body;
+    const { assignedTo, email, subject, description, priority, categoryId } = req.body;
 
     try {
         // 1. Validate payload
@@ -162,16 +162,22 @@ exports.createTicket = async (req, res) => {
             });
         }
 
-        // 4. Create the ticket
-        const newTicket = await Ticket.create({
+        // Prepare ticket data
+        const ticketData = {
             userId: user.id, // Use the found user's ID
             assignedTo: assignedTo,
             subject: subject,
             description: description,
             priority: priority,
             categoryId: category.id
-            // attachment will be handled by file upload logic (e.g., multer)
-        });
+        }
+
+        if(req.file){
+            ticketData.attachment = req.file.path;
+        }
+
+        // 4. Create the ticket
+        const newTicket = await Ticket.create(ticketData);
 
         return res.status(commonConstants.STATUS_CODE.CREATED).json({
             success: true,
