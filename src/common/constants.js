@@ -83,14 +83,14 @@ var commonConstants = {
                 DEFAULT_USER_ROLE: "user"
             }
         },
-        AUTHORIZATION:{
+        AUTHORIZATION: {
             AUTHORIZED: "Please proceed user has been authorized.",
             UNAUTHORIZED: "User is not authorized to access."
         },
         ROLES: {
             SUPER_ADMIN: "Super Admin", // Create, Read, Update, Delete
             ADMIN: "Admin", // Read, Update (Assign)
-            AGENT:"Agent" // Create, Read
+            AGENT: "Agent" // Create, Read
         }
     },
 
@@ -170,6 +170,24 @@ var commonConstants = {
         UNAUTHORIZED: "Unauthorized request.",
         TOKEN_EXPIRED: "Token has expired. Please log"
     },
+
+    ATTACHMENT: {
+        DIRECTORY: {
+            PATH: "uploads/attachments",
+        },
+        CREATE: {
+            SUCCESS: "Directory created successfully.",
+            FAILED: "Unable to create directory.",
+            INVALID_FILE_TYPE: "Invalid file type. Only JPEG, and PNG images are allowed.",
+            LIMIT_FILE_SIZE: "File size is too large. Maximum size is 5MB.",
+            INVALID_IMAGE: "The uploaded file is not a valid image."
+        },
+        ERRORS:{
+            DELETE_INVALID_FILE: "Error deleting invalid file at",
+            VALIDATE_IMAGE: "Error validating image:"
+        }
+
+    }
 }
 
 module.exports = commonConstants

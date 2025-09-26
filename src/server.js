@@ -5,6 +5,7 @@ const session = require("express-session");
 require("./utilities/passport"); // register strategy
 
 const db = require("./database/index");
+const directory = require("./utilities/directory");
 
 const commonConstants = require("./common/constants");
 const authRoutes = require("./routes/authRoutes");
@@ -42,6 +43,9 @@ db.sequelize
   .catch((error) => {
     console.log(commonConstants.DATABASE_CONNECTION.FAILED + error)
   })
+
+// Create upload directory
+directory.createUploadDirectory();
 
 app.listen(PORT, () => console.log(
   commonConstants.SERVER_CONNECTION.SUCCESS + PORT
