@@ -3,7 +3,8 @@ const commonConstants = require("../common/constants");
 const User = require("../models/user");
 const Category = require("../models/category");
 const Ticket = require("../models/ticket");
-const { Sequelize } = require('sequelize')
+const { Sequelize } = require('sequelize');
+const req = require("express/lib/request");
 
 
 exports.getTickets = async (req, res) => {
@@ -185,6 +186,46 @@ exports.createTicket = async (req, res) => {
             ticket: newTicket
         });
 
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+exports.inProgressTicket = async (req, res) => {
+    const ticketId = req.params.id;
+
+    try {
+
+        const ticket = await Ticket.findByPk(ticketId);
+
+        if (!ticket) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.TICKET.RETRIEVE.FAILED
+            })
+        }
+
+        if (ticket.status == commonConstants.TICKET.STATUS.IN_PROGRESS) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.TICKET.UPDATE.FAILED +
+                    commonConstants.TICKET.ERROR_MESSAGE.TICKET_ALREADY_IN_PROGRESS
+            })
+        }
+
+        await ticket.update({
+            status: commonConstants.TICKET.STATUS.IN_PROGRESS
+        })
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.TICKET.UPDATE.SUCCESS,
+            data: ticket
+        })
+        
     } catch (error) {
         return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
             success: false,

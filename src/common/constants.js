@@ -145,7 +145,8 @@ var commonConstants = {
             CLOSED: "Closed"
         },
         ERROR_MESSAGE: {
-            TICKET_ALREADY_CLOSED: "Ticket is already closed."
+            TICKET_ALREADY_CLOSED: "Ticket is already closed.",
+            TICKET_ALREADY_IN_PROGRESS: "Ticket is already in progress."
         }
     },
     CATEGORY: {

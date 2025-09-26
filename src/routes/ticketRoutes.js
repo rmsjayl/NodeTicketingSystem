@@ -5,7 +5,7 @@ const { authenticate, authorizeRoles } = require("../middlewares/authentication"
 const upload = require("../middlewares/handleAttachments");
 const limitFileSize = require("../middlewares/limitFileSize");
 const validateImage = require("../middlewares/imageValidator");
-const { closeTicket, createTicket, getTickets, getTicketById } = require("../controllers/ticketController");
+const { inProgressTicket, closeTicket, createTicket, getTickets, getTicketById } = require("../controllers/ticketController");
 const commonConstants = require("../common/constants");
 
 router
@@ -57,6 +57,19 @@ router
             ]
         ),
         closeTicket
+    )
+
+router
+    .route("/:id/in-progress")
+    .patch(
+        authenticate,
+        authorizeRoles(
+            [
+                commonConstants.USER.ROLES.ADMIN,
+                commonConstants.USER.ROLES.SUPER_ADMIN
+            ]
+        ),
+        inProgressTicket
     )
 
 module.exports = router;
