@@ -174,17 +174,17 @@ var commonConstants = {
     ATTACHMENT: {
         DIRECTORY: {
             PATH: "uploads/attachments",
+            CREATE: {
+                SUCCESS: "Directory created successfully.",
+                FAILED: "Unable to create directory."
+            }
         },
-        CREATE: {
-            SUCCESS: "Directory created successfully.",
-            FAILED: "Unable to create directory.",
+        ERRORS: {
+            DELETE_INVALID_FILE: "Error deleting invalid file at",
+            VALIDATE_IMAGE: "Error validating image:",
             INVALID_FILE_TYPE: "Invalid file type. Only JPEG, and PNG images are allowed.",
             LIMIT_FILE_SIZE: "File size is too large. Maximum size is 5MB.",
             INVALID_IMAGE: "The uploaded file is not a valid image."
-        },
-        ERRORS:{
-            DELETE_INVALID_FILE: "Error deleting invalid file at",
-            VALIDATE_IMAGE: "Error validating image:"
         }
 
     }

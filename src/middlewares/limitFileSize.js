@@ -13,7 +13,7 @@ const limitFileSize = (err, req, res, next) => {
         if (err.code === "LIMIT_FILE_SIZE") {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
-                message: commonConstants.ATTACHMENT.CREATE.LIMIT_FILE_SIZE,
+                message: commonConstants.ATTACHMENT.ERRORS.LIMIT_FILE_SIZE,
             });
         }
         // Handle other potential multer errors here if needed

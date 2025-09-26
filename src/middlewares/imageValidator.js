@@ -41,7 +41,7 @@ const validateImage = async (req, res, next) => {
             await fs.unlink(filePath); // Delete the potentially malicious or incorrect file
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
-                message: commonConstants.ATTACHMENT.CREATE.INVALID_IMAGE,
+                message: commonConstants.ATTACHMENT.ERRORS.INVALID_IMAGE,
             });
         }
 

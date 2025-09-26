@@ -32,7 +32,7 @@ const fileFilter = (req, file, cb) => {
         cb(null, true); // Accept file
     } else {
         // Pass an error to be caught by the global error handler.
-        const error = new Error(commonConstants.ATTACHMENT.CREATE.INVALID_FILE_TYPE);
+        const error = new Error(commonConstants.ATTACHMENT.ERRORS.INVALID_FILE_TYPE);
         cb(error, false);
     }
 };
