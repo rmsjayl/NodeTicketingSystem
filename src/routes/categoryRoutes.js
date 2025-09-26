@@ -46,7 +46,15 @@ router
         ),
         deleteCategoryById
     )
-    .put(updateCategory)
+    .put(
+        authenticate,
+        authorizeRoles(
+            [
+                commonConstants.USER.ROLES.SUPER_ADMIN
+            ]
+        ),
+        updateCategory
+    )
 
 
 module.exports = router;
