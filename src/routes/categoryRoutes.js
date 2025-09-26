@@ -2,18 +2,18 @@ const express = require("express");
 
 const router = express.Router();
 const { authenticate, authorizeRoles } = require("../middlewares/authentication")
-const { createCategory, getCategories, getCategoryById, deleteCategoryById } = require("../controllers/categoryController");
+const { createCategory, getCategories, getCategoryById, deleteCategoryById, updateCategory } = require("../controllers/categoryController");
 const commonConstants = require("../common/constants");
 
 router
     .route("/")
     .get(
-        authenticate,
-        authorizeRoles(
-            [
-                commonConstants.USER.ROLES.SUPER_ADMIN
-            ]
-        ), 
+        // authenticate,
+        // authorizeRoles(
+        //     [
+        //         commonConstants.USER.ROLES.SUPER_ADMIN
+        //     ]
+        // ), 
         getCategories
     )
     .post(
@@ -45,6 +45,15 @@ router
             ]
         ),
         deleteCategoryById
+    )
+    .put(
+        authenticate,
+        authorizeRoles(
+            [
+                commonConstants.USER.ROLES.SUPER_ADMIN
+            ]
+        ),
+        updateCategory
     )
 
 
