@@ -14,16 +14,16 @@ exports.getTickets = async (req, res) => {
         const limit = parseInt(req.query.limit) || commonConstants.PAGINATION.LIMIT;
         const offset = (page - 1) * limit;
         const status = req.query.status || commonConstants.TICKET.STATUS.OPEN;
-        // const roles = req.user.roles;
+        const roles = req.user.roles;
 
         // Variable where
-        // var whereClause = {}
-        // whereClause.status = commonHelpers.titleCase(status);
+        var whereClause = {}
+        whereClause.status = commonHelpers.titleCase(status);
 
         // Filter based on user roles
-        // if (roles == commonConstants.USER.ROLES.AGENT) {
-        //     whereClause.assignedTo = req.user.id;
-        // }
+        if (roles == commonConstants.USER.ROLES.AGENT) {
+            whereClause.assignedTo = req.user.id;
+        }
 
         const { count, rows } = await Ticket.findAndCountAll({
             include: [
@@ -63,7 +63,7 @@ exports.getTickets = async (req, res) => {
             order: [["createdAt", "DESC"]],
             limit,
             offset,
-            // where: whereClause
+            where: whereClause
         });
 
         const totalPage = Math.ceil(count / limit);
