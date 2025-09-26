@@ -162,6 +162,11 @@ var commonConstants = {
             SUCCESS: "Category has been deleted successfully.",
             FAILED: "Unable to delete a category. "
         },
+        UPDATE: {
+            SUCCESS: "Category updated successfully.",
+            FAILED: "Unable to update category. ",
+            NO_CHANGE: "No changes were applied."
+        },
     },
 
     TOKEN: {
