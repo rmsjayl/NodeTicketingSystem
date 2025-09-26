@@ -1,6 +1,7 @@
 const commonHelpers = require("../common/helpers");
 const commonConstants = require("../common/constants");
 const Category  = require("../models/category"); // Import models from index.js
+const req = require("express/lib/request");
 
 exports.createCategory = async (req, res) => {
 
@@ -83,5 +84,73 @@ exports.getCategories = async (req, res) => {
             success: false,
             message: error.message
         })
+    }
+}
+
+exports.getCategoryById = async (req,res) => {
+    const categoryId = req.params.id;
+
+    try {
+        const category = await Category.findByPk(categoryId);
+
+        if(!category){
+            return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
+                succes: false,
+                message: commonConstants.CATEGORY.RETRIEVE.NOT_FOUND
+            });
+        }
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.CATEGORY.RETRIEVE.SUCCESS,
+            data: category
+        })
+        
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.CATEGORY.RETRIEVE.SUCCESS,
+            totalRecords: count,
+            pagination: {
+                page: `${page} out of ${totalPage}`,
+                limit: limit,
+            },
+            categories: rows,
+        });
+    }
+}
+
+exports.deleteCategoryById = async (req, res) => {
+    const categoryId = req.params.id;
+
+    try {
+        const category = await Category.findByPk(categoryId);
+
+        if(!category){
+            return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
+                succes: false,
+                message: commonConstants.CATEGORY.RETRIEVE.NOT_FOUND
+            });
+        }
+
+        await category.destroy();
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.CATEGORY.RETRIEVE.SUCCESS,
+            data: category
+        })
+        
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.CATEGORY.RETRIEVE.SUCCESS,
+            totalRecords: count,
+            pagination: {
+                page: `${page} out of ${totalPage}`,
+                limit: limit,
+            },
+            categories: rows,
+        });
     }
 }

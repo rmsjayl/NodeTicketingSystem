@@ -42,7 +42,6 @@ var commonConstants = {
         KEY_NOT_PROVIDED: "Request is invalid."
     },
 
-    //USER MODEL
     USER: {
         RETRIEVE: {
             SUCCESS: "User retrieved successfully.",
@@ -153,11 +152,15 @@ var commonConstants = {
         RETRIEVE: {
             SUCCESS: "Category retrieved successfully.",
             FAILED: "Unable to retrieve category. ",
-            NOT_FOUND: "No categories found."
+            NOT_FOUND: "No category found."
         },
         CREATE: {
             SUCCESS: "Category created successfully.",
             FAILED: "Unable to create a category. "
+        },
+        DELETE: {
+            SUCCESS: "Category has been deleted successfully.",
+            FAILED: "Unable to delete a category. "
         },
     },
 
