@@ -7,35 +7,7 @@ const TEMPLATE_PATHS = {
     [commonConstants.EMAIL_TYPES.FORGOT_PASSWORD]: "../templates/forgotPassword.hbs"
 }
 
-const sendEmail = async (type, email, subject, user) => {
-    const transporter = nodeMailer.createTransport({
-        service: process.env.EMAIL_SERVICE,
-        port: process.env.EMAIL_PORT,
-        auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_PASSWORD,
-        }
-    });
-
-    const templatePath = TEMPLATE_PATHS[type];
-    if (!templatePath) return;
-
-    const htmlContent = commonHelpers.generateEmailContent(templatePath, user, type);
-
-    try {
-        await transporter.sendMail({
-            from: process.env.GMAIL_USER,
-            to: email,
-            subject: subject,
-            html: htmlContent,
-        });
-        console.log(commonConstants.SEND_EMAIL.SUCCESS)
-    } catch (error) {
-        return `${commonConstants.SEND_EMAIL.FAILED} ${error.message}`
-    }
-}
-
-const sendTemplateEmail = async (receiver, type, subject, data) => {
+const sendEmail = async (receiver, type, subject, data) => {
     const transporter = nodeMailer.createTransport({
         service: process.env.EMAIL_SERVICE,
         port: process.env.EMAIL_PORT,
@@ -63,4 +35,4 @@ const sendTemplateEmail = async (receiver, type, subject, data) => {
     }
 }
 
-module.exports = { sendEmail, sendTemplateEmail };
+module.exports = sendEmail;

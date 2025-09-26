@@ -51,30 +51,14 @@ const commonHelpers = {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
         });
     },
-    generateEmailContent: function (templatePath, user, type) {
-        const emailPath = path.join(__dirname, templatePath);
-        const source = fs.readFileSync(emailPath, "utf8");
-        const template = Handlebars.compile(source);
-
-        const urlMap = {
-            [commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION]: `api/auth/verify/${user.id}/token/${user.accountVerficationToken}`,
-            [commonConstants.EMAIL_TYPES.FORGOT_PASSWORD]: `api/auth/resetPassword/`
-        }
-
-        return template({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            url: `${process.env.BASE_URL}${urlMap[type]}`,
-        });
-    },
-    generateEmailFromTemplate: function (templatePath, user, data) {
+    generateEmailFromTemplate: function (templatePath, receiver, data) {
         const fullTemplatePath = path.join(__dirname, templatePath);
         const source = fs.readFileSync(fullTemplatePath, "utf8");
         const template = Handlebars.compile(source);
+        
         return template({
             data: data,
-            user: user,
+            user: receiver,
         });
     },
     titleCase: function (str) {

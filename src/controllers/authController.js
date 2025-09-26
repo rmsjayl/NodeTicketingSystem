@@ -4,7 +4,7 @@ const User = require("../models/user");
 const Token = require("../models/token");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const { sendTemplateEmail } = require("../utilities/sendEmail");
+const sendEmail = require("../utilities/sendEmail");
 
 exports.register = async (req, res) => {
     const { firstName, lastName, email, password, roles, username } = req.body;
@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
         if (userExists) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
-                message: commonConstants.USER.CREATE.ALREADY_EXISTS
+                message: commonConstants.USER.CREATE.EMAIL_EXISTS
             });
         };
 
@@ -42,7 +42,7 @@ exports.register = async (req, res) => {
         if (userNameExists) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
-                message: commonConstants.USER.CREATE.ALREADY_EXISTS
+                message: commonConstants.USER.CREATE.USERNAME_EXISTS
             });
         }
 
@@ -222,7 +222,7 @@ exports.forgotPassword = async (req, res) => {
         });
         const resetPasswordUrl = `${process.env.BASE_URL}/api/auth/resetPassword/${token.token}`
 
-        sendTemplateEmail(
+        sendEmail(
             user.email,
             commonConstants.EMAIL_TYPES.FORGOT_PASSWORD,
             commonConstants.EMAIL_TYPES.FORGOT_PASSWORD,

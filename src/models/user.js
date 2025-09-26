@@ -2,7 +2,7 @@ const commonConstants = require("../common/constants");
 const commonHelpers = require("../common/helpers");
 const sequelize = require("../database/db_conn");
 const { DataTypes } = require("sequelize");
-const { sendEmail } = require("../utilities/sendEmail");
+const sendEmail = require("../utilities/sendEmail");
 
 const User = sequelize.define("User", {
     id: {
@@ -64,10 +64,13 @@ User.afterCreate(async (user) => {
         .then(() => console.log(commonConstants.USER.UPDATE.SUCCESS))
         .catch((error) => console.log(commonConstants.USER.UPDATE.FAILED + error.message));
 
-    await sendEmail(commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION,
+    const url = `${process.env.BASE_URL}/api/auth/verify/${user.id}/token/${user.accountVerficationToken}`
+
+    await sendEmail(
         user.email,
+        commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION,
         commonConstants.SEND_EMAIL.ACCOUNT_VERIFICATION,
-        user)
+        { username: user.username, url: url })
         .then(() => console.log(commonConstants.USER.SEND_EMAIL_VERIFICATION.SUCCESS))
         .catch((error) => commonConstants.USER.SEND_EMAIL_VERIFICATION.FAILED + error.message);
 });

@@ -52,7 +52,8 @@ var commonConstants = {
         CREATE: {
             SUCCESS: "User created successfully.",
             FAILED: "Unable to create a user. ",
-            ALREADY_EXISTS: "User already exists. Please try different email."
+            EMAIL_EXISTS: "User already exists. Please try different email.",
+            USERNAME_EXISTS: "Username already exists. Please try different username."
         },
         UPDATE: {
             SUCCESS: "User updated successfully.",
