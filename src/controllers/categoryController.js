@@ -187,6 +187,8 @@ exports.updateCategory = async (req, res) => {
             })
         }
 
+        //Update the category
+
         await category.update({
             name: name,
             details: details
