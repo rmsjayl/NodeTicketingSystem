@@ -1,6 +1,6 @@
 const commonHelpers = require("../common/helpers");
 const commonConstants = require("../common/constants");
-const Category  = require("../models/category"); // Import models from index.js
+const Category = require("../models/category"); // Import models from index.js
 const req = require("express/lib/request");
 
 exports.createCategory = async (req, res) => {
@@ -40,11 +40,11 @@ exports.createCategory = async (req, res) => {
 }
 
 exports.getCategories = async (req, res) => {
-     try {
+    try {
         const page = parseInt(req.query.page) || commonConstants.PAGINATION.PAGE;
         const limit = parseInt(req.query.limit) || commonConstants.PAGINATION.LIMIT;
         const offset = (page - 1) * limit;
-    
+
 
         const { count, rows } = await Category.findAndCountAll({
             order: [["createdAt", "DESC"]],
@@ -87,13 +87,13 @@ exports.getCategories = async (req, res) => {
     }
 }
 
-exports.getCategoryById = async (req,res) => {
+exports.getCategoryById = async (req, res) => {
     const categoryId = req.params.id;
 
     try {
         const category = await Category.findByPk(categoryId);
 
-        if(!category){
+        if (!category) {
             return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
                 succes: false,
                 message: commonConstants.CATEGORY.RETRIEVE.NOT_FOUND
@@ -105,7 +105,7 @@ exports.getCategoryById = async (req,res) => {
             message: commonConstants.CATEGORY.RETRIEVE.SUCCESS,
             data: category
         })
-        
+
     } catch (error) {
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,
@@ -126,7 +126,7 @@ exports.deleteCategoryById = async (req, res) => {
     try {
         const category = await Category.findByPk(categoryId);
 
-        if(!category){
+        if (!category) {
             return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
                 succes: false,
                 message: commonConstants.CATEGORY.RETRIEVE.NOT_FOUND
@@ -140,7 +140,64 @@ exports.deleteCategoryById = async (req, res) => {
             message: commonConstants.CATEGORY.RETRIEVE.SUCCESS,
             data: category
         })
-        
+
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.CATEGORY.RETRIEVE.SUCCESS,
+            totalRecords: count,
+            pagination: {
+                page: `${page} out of ${totalPage}`,
+                limit: limit,
+            },
+            categories: rows,
+        });
+    }
+}
+
+exports.updateCategory = async (req, res) => {
+    const categoryId = req.params.id;
+    const { name, details } = req.body;
+
+    try {
+
+        const payload = { name, details };
+        const validatedInputs = commonHelpers.payloadValidation(payload);
+
+        if (validatedInputs) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: validatedInputs
+            });
+        }
+
+        const category = await Category.findByPk(categoryId);
+
+        if (!category) {
+            return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
+                success: false,
+                message: commonConstants.CATEGORY.RETRIEVE.NOT_FOUND
+            })
+        }
+
+        if (category.name === name && category.details === details) {
+            return res.status(commonConstants.STATUS_CODE.ACCEPTED).json({
+                success: false,
+                message: commonConstants.CATEGORY.UPDATE.NO_CHANGE
+            })
+        }
+
+        await category.update({
+            name: name,
+            details: details
+        })
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.CATEGORY.UPDATE.SUCCESS,
+            data: category
+        })
+
     } catch (error) {
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,
