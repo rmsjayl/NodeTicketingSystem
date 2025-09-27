@@ -5,6 +5,7 @@ const commonConstants = require("./constants");
 const fs = require("fs");
 const path = require("path");
 const Handlebars = require("handlebars");
+const passwordComplexity = require("joi-password-complexity")
 
 const commonHelpers = {
     passwordHasher: function (password) {
@@ -55,7 +56,7 @@ const commonHelpers = {
         const fullTemplatePath = path.join(__dirname, templatePath);
         const source = fs.readFileSync(fullTemplatePath, "utf8");
         const template = Handlebars.compile(source);
-        
+
         return template({
             data: data,
             user: receiver,
@@ -69,12 +70,29 @@ const commonHelpers = {
         return str
             .toLowerCase()
             .split(' ')
-            .map(function(word) {
-            // For each word, capitalize the first letter and concatenate with the rest in lowercase
+            .map(function (word) {
+                // For each word, capitalize the first letter and concatenate with the rest in lowercase
                 return word.charAt(0).toUpperCase() + word.slice(1);
             })
             .join(' '); // Join the words back into a single string with spaces
     },
+    registerPasswordComplexity: function (password) {
+        const complexityOptions = {
+            min: 8,
+            max: 30,
+            lowerCase: 1,
+            upperCase: 1,
+            numeric: 1,
+            symbol: 1,
+            requirementCount: 4,
+        }
+
+        const label = "Password"
+
+        if (passwordComplexity(complexityOptions, label).validate(password).error) {
+            return passwordComplexity(complexityOptions, label).validate(password).error.message;
+        }
+    }
 }
 
 module.exports = commonHelpers;

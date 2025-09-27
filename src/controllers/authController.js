@@ -28,6 +28,15 @@ exports.register = async (req, res) => {
             });
         }
 
+        const passwordComplexity = commonHelpers.registerPasswordComplexity(password);
+
+        if(passwordComplexity){
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: passwordComplexity
+            })
+        }
+
         const userExists = await User.findOne({ where: { email: req.body.email } })
 
         if (userExists) {
