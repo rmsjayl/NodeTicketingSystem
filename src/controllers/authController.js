@@ -30,7 +30,7 @@ exports.register = async (req, res) => {
 
         const passwordComplexity = commonHelpers.registerPasswordComplexity(password);
 
-        if(passwordComplexity){
+        if (passwordComplexity) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
                 message: passwordComplexity
@@ -128,7 +128,6 @@ exports.login = async (req, res) => {
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,
             message: commonConstants.LOGIN.SUCCESS,
-            user: user,
             token: accessToken
         })
 
@@ -186,36 +185,12 @@ exports.accountVerification = async (req, res) => {
     }
 }
 
-exports.resetPassword = async (req, res) => {
-
-    try {
-
-        const { currentPassword, newPassword } = req.body;
-
-
-
-    } catch (error) {
-        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            message: error.message,
-        });
-    }
-
-
-
-    res.send("Reset password route is working ...");
-};
-
-exports.updatePassword = async (req, res) => {
-    res.send("Update password route is working ...");
-};
-
 exports.forgotPassword = async (req, res) => {
 
     try {
         const { email } = req.body;
-
         const user = await User.findOne({ where: { email: email } });
+
         if (!user) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
@@ -225,17 +200,16 @@ exports.forgotPassword = async (req, res) => {
 
         const token = await Token.create({
             userId: user.id,
-            token: commonHelpers.generateRandomToken(),
             type: commonConstants.TOKEN.TYPE.FORGOT_PASSWORD,
-            dateExpire: Date.now() + 30 * 60 * 1000
         });
-        const resetPasswordUrl = `${process.env.BASE_URL}/api/auth/resetPassword/${token.token}`
+
+        const resetPasswordUrl = `${process.env.BASE_URL}/api/auth/resetpassword/${token.token}/user/${user.id}`
 
         sendEmail(
             user.email,
             commonConstants.EMAIL_TYPES.FORGOT_PASSWORD,
             commonConstants.EMAIL_TYPES.FORGOT_PASSWORD,
-            { resetPasswordUrl: resetPasswordUrl }
+            { resetPasswordUrl: resetPasswordUrl, username: user.username }
         )
 
         return res.status(commonConstants.STATUS_CODE.OK).json({
@@ -249,6 +223,106 @@ exports.forgotPassword = async (req, res) => {
         });
     }
 
+};
+
+exports.resetPassword = async (req, res) => {
+
+    const { userId, tokenId } = req.params;
+    const { password, confirmpassword } = req.body;
+
+    try {
+
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
+                success: false,
+                message: commonConstants.USER.RETRIEVE.NOT_FOUND
+            })
+        }
+
+        const token = await Token.findOne({ where: { token: tokenId } })
+
+        if (!token) {
+            return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
+                success: false,
+                message: commonConstants.REQUEST_TOKEN.NOT_FOUND
+            });
+        }
+
+        if (token.dateExpire < Date.now()) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.REQUEST_TOKEN.EXPIRED
+            });
+        }
+
+        if(token.isUsed){
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.REQUEST_TOKEN.ALREADY_USED
+            });
+        }
+
+        const payload = { password: password, confirmpassword: confirmpassword }
+
+        const validation = commonHelpers.payloadValidation(payload)
+
+        if (validation) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: validation
+            });
+        };
+
+        const passwordComplexity = commonHelpers.registerPasswordComplexity(password);
+
+        if (passwordComplexity) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: passwordComplexity
+            })
+        };
+
+        if (password != confirmpassword) {
+            return res.status(commonConstants.STATUS_CODE.UNAUTHORIZED).json({
+                success: false,
+                message: commonConstants.USER.RESET_PASSWORD.NOT_MATCH,
+            });
+        }
+
+        // if the updated password matches the current password of the user, THROW an error;
+        const isMatchCurrentPassword = commonHelpers.passwordCompare(password, user.password);
+
+        if(isMatchCurrentPassword){
+             return res.status(commonConstants.STATUS_CODE.UNAUTHORIZED).json({
+                success: false,
+                message: commonConstants.USER.RESET_PASSWORD.FAILED,
+            });
+        };
+
+        const updateUser = await user.update({
+            password: commonHelpers.passwordHasher(password)
+        })
+
+        const updateToken = await token.update({
+            dateUsed: Date.now(),
+            isUsed: true,
+        })
+
+        Promise.all([updateUser, updateToken]);
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: commonConstants.USER.UPDATE.SUCCESS
+        });
+
+    } catch (error) {
+        return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: error.message,
+        });
+    }
 };
 
 exports.googleCallback = (req, res, next) => {

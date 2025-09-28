@@ -85,9 +85,9 @@ const commonHelpers = {
             numeric: 1,
             symbol: 1,
             requirementCount: 4,
-        }
+        };
 
-        const label = "Password"
+        const label = "Password";
 
         if (passwordComplexity(complexityOptions, label).validate(password).error) {
             return passwordComplexity(complexityOptions, label).validate(password).error.message;
