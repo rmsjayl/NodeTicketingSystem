@@ -41,31 +41,14 @@ const User = sequelize.define("User", {
         type: DataTypes.DATE,
         allowNull: true,
     },
-    accountVerficationToken: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    accountVerificationExpiry: {
-        type: DataTypes.DATE,
-        allowNull: true,
-    },
 }, {
     timestamps: true,
 });
 
 User.afterCreate(async (user) => {
-    const token = commonHelpers.generateRandomToken();
-    const expires = Date.now() + 30 * 60 * 1000;
-
-    await user.update({
-        accountVerficationToken: token,
-        accountVerificationExpiry: expires,
-    })
-        .then(() => console.log(commonConstants.USER.UPDATE.SUCCESS))
-        .catch((error) => console.log(commonConstants.USER.UPDATE.FAILED + error.message));
 
     const url = `${process.env.BASE_URL}/api/auth/verify/${user.id}/token/${user.accountVerficationToken}`
-
+    
     await sendEmail(
         user.email,
         commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION,

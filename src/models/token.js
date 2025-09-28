@@ -11,7 +11,7 @@ const Token = sequelize.define("Token", {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
     },
-    userId:{
+    userId: {
         type: DataTypes.UUID,
         references: {
             model: User, // Use table name as a string
@@ -20,7 +20,6 @@ const Token = sequelize.define("Token", {
     },
     token: {
         type: DataTypes.STRING,
-        allowNull: false,
     },
     type: {
         type: DataTypes.ENUM(
@@ -30,20 +29,31 @@ const Token = sequelize.define("Token", {
     },
     dateExpire: {
         type: DataTypes.DATE,
-        allowNull: false,
     },
     isUsed: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-        allowNull: false,
     },
     dateUsed: {
         type: DataTypes.DATE,
-        allowNull: true,
     }
-    
+
 }, {
     timestamps: true,
 });
+
+Token.afterCreate(async (token) => {
+    const requestToken = commonHelpers.generateRandomToken();
+    const expires = Date.now() + 30 * 60 * 1000;
+
+    await token.update({
+        token: requestToken,
+        dateExpire: expires
+    })
+        .then(() => console.log(commonConstants.REQUEST_TOKEN.SUCCESS))
+        .catch((error) => console.log(commonConstants.REQUEST_TOKEN.FAILED + error.message))
+
+
+})
 
 module.exports = Token;

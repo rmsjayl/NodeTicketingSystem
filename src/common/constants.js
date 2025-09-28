@@ -22,7 +22,8 @@ var commonConstants = {
         INVALID_PAGE_NUMBER: "Invalid page number. Max number is: "
     },
 
-    //HTTP ERRORS
+    // <----------- HTTP STATUS CODES ------------->
+
     STATUS_CODE: {
         OK: 200,
         CREATED: 201,
@@ -38,8 +39,118 @@ var commonConstants = {
         GATEWAY_TIMEOUT: 504,
     },
 
+    // <----------- END ------------->
+
     PAYLOAD_VALIDATION: {
         KEY_NOT_PROVIDED: "Request is invalid."
+    },
+
+    LOGIN: {
+        SUCCESS: "User logged in successfully.",
+        FAILED: "Invalid credentials. Please try again ..."
+    },
+
+    VERIFICATION: {
+        SUCCESS: "User verified successfully.",
+        EXPIRED: "User not verified. Verification token has expired.",
+        INVALID: "Invalid credentials.",
+        ALREADY_VERIFIED: "User is alread verified"
+    },
+
+    SEND_EMAIL: {
+        SUCCESS: "Email sent successfully.",
+        FAILED: "Email failed to send. ",
+        ACCOUNT_VERIFICATION: "Account Verification",
+    },
+
+    EMAIL_TYPES: {
+        ACCOUNT_VERIFICATION: "Account Verification",
+        REQUEST_TOKEN: "Request Token",
+        UPDATE_PASSWORD: "Update Password",
+        FORGOT_PASSWORD: "Forgot Password",
+        TICKET_DETAILS: "Ticket Details"
+    },
+
+    TOKEN: {
+        TYPE: {
+            ACCOUNT_VERIFICATION: "Account Verification",
+            FORGOT_PASSWORD: "Forgot Password"
+        },
+        NO_TOKEN: "Invalid request. No token provided.",
+        INVALID: "Invalid token. Please login again.",
+        UNAUTHORIZED: "Unauthorized request.",
+        TOKEN_EXPIRED: "Token has expired. Please log"
+    },
+
+    ATTACHMENT: {
+        DIRECTORY: {
+            PATH: "uploads/attachments",
+            CREATE: {
+                SUCCESS: "Directory created successfully.",
+                FAILED: "Unable to create directory."
+            }
+        },
+        ERRORS: {
+            DELETE_INVALID_FILE: "Error deleting invalid file at",
+            VALIDATE_IMAGE: "Error validating image:",
+            INVALID_FILE_TYPE: "Invalid file type. Only JPEG, and PNG images are allowed.",
+            LIMIT_FILE_SIZE: "File size is too large. Maximum size is 5MB.",
+            INVALID_IMAGE: "The uploaded file is not a valid image."
+        }
+
+    },
+
+    // <----------- MODEL CONSTANTS HERE ------------->
+
+    TICKET: {
+        RETRIEVE: {
+            SUCCESS: "Ticket retrieved successfully.",
+            FAILED: "Unable to retrieve ticket. ",
+            NOT_FOUND: "No tickets found."
+        },
+        CREATE: {
+            SUCCESS: "Ticket created successfully.",
+            FAILED: "Unable to create a ticket. "
+        },
+        UPDATE: {
+            SUCCESS: "Ticket updated successfully.",
+            FAILED: "Unable to update ticket. ",
+        },
+        PRIORITY: {
+            HIGH: "High",
+            MEDIUM: "Medium",
+            LOW: "Low"
+        },
+        STATUS: {
+            OPEN: "Open",
+            IN_PROGRESS: "In Progress",
+            CLOSED: "Closed"
+        },
+        ERROR_MESSAGE: {
+            TICKET_ALREADY_CLOSED: "Ticket is already closed.",
+            TICKET_ALREADY_IN_PROGRESS: "Ticket is already in progress."
+        }
+    },
+
+    CATEGORY: {
+        RETRIEVE: {
+            SUCCESS: "Category retrieved successfully.",
+            FAILED: "Unable to retrieve category. ",
+            NOT_FOUND: "No category found."
+        },
+        CREATE: {
+            SUCCESS: "Category created successfully.",
+            FAILED: "Unable to create a category. "
+        },
+        DELETE: {
+            SUCCESS: "Category has been deleted successfully.",
+            FAILED: "Unable to delete a category. "
+        },
+        UPDATE: {
+            SUCCESS: "Category updated successfully.",
+            FAILED: "Unable to update category. ",
+            NO_CHANGE: "No changes were applied."
+        },
     },
 
     USER: {
@@ -91,113 +202,23 @@ var commonConstants = {
             SUPER_ADMIN: "Super Admin", // Create, Read, Update, Delete
             ADMIN: "Admin", // Read, Update (Assign)
             AGENT: "Agent" // Create, Read
+        },
+        RESET_PASSWORD: {
+            SUCCESS: "Password was successfully updated. Please log in your new password.",
+            FAILED: "Failed to update your password. Should not be the same as your old password.",
+            NOT_MATCH: "Please confirm your password again."
         }
     },
 
-    LOGIN: {
-        SUCCESS: "User logged in successfully.",
-        FAILED: "Invalid credentials. Please try again ..."
-    },
-
-    VERIFICATION: {
-        SUCCESS: "User verified successfully.",
-        EXPIRED: "User not verified. Verification token has expired.",
-        INVALID: "Invalid credentials.",
-        ALREADY_VERIFIED: "User is alread verified"
-    },
-
-    SEND_EMAIL: {
-        SUCCESS: "Email sent successfully.",
-        FAILED: "Email failed to send. ",
-        ACCOUNT_VERIFICATION: "Account Verification",
-    },
-
-    EMAIL_TYPES: {
-        ACCOUNT_VERIFICATION: "Account Verification",
-        REQUEST_TOKEN: "Request Token",
-        UPDATE_PASSWORD: "Update Password",
-        FORGOT_PASSWORD: "Forgot Password",
-        TICKET_DETAILS: "Ticket Details"
-    },
-
-    TICKET: {
-        RETRIEVE: {
-            SUCCESS: "Ticket retrieved successfully.",
-            FAILED: "Unable to retrieve ticket. ",
-            NOT_FOUND: "No tickets found."
-        },
-        CREATE: {
-            SUCCESS: "Ticket created successfully.",
-            FAILED: "Unable to create a ticket. "
-        },
-        UPDATE: {
-            SUCCESS: "Ticket updated successfully.",
-            FAILED: "Unable to update ticket. ",
-        },
-        PRIORITY: {
-            HIGH: "High",
-            MEDIUM: "Medium",
-            LOW: "Low"
-        },
-        STATUS: {
-            OPEN: "Open",
-            IN_PROGRESS: "In Progress",
-            CLOSED: "Closed"
-        },
-        ERROR_MESSAGE: {
-            TICKET_ALREADY_CLOSED: "Ticket is already closed.",
-            TICKET_ALREADY_IN_PROGRESS: "Ticket is already in progress."
-        }
-    },
-    CATEGORY: {
-        RETRIEVE: {
-            SUCCESS: "Category retrieved successfully.",
-            FAILED: "Unable to retrieve category. ",
-            NOT_FOUND: "No category found."
-        },
-        CREATE: {
-            SUCCESS: "Category created successfully.",
-            FAILED: "Unable to create a category. "
-        },
-        DELETE: {
-            SUCCESS: "Category has been deleted successfully.",
-            FAILED: "Unable to delete a category. "
-        },
-        UPDATE: {
-            SUCCESS: "Category updated successfully.",
-            FAILED: "Unable to update category. ",
-            NO_CHANGE: "No changes were applied."
-        },
-    },
-
-    TOKEN: {
-        TYPE: {
-            ACCOUNT_VERIFICATION: "Account Verification",
-            FORGOT_PASSWORD: "Forgot Password"
-        },
-        NO_TOKEN: "Invalid request. No token provided.",
-        INVALID: "Invalid token. Please login again.",
-        UNAUTHORIZED: "Unauthorized request.",
-        TOKEN_EXPIRED: "Token has expired. Please log"
-    },
-
-    ATTACHMENT: {
-        DIRECTORY: {
-            PATH: "uploads/attachments",
-            CREATE: {
-                SUCCESS: "Directory created successfully.",
-                FAILED: "Unable to create directory."
-            }
-        },
-        ERRORS: {
-            DELETE_INVALID_FILE: "Error deleting invalid file at",
-            VALIDATE_IMAGE: "Error validating image:",
-            INVALID_FILE_TYPE: "Invalid file type. Only JPEG, and PNG images are allowed.",
-            LIMIT_FILE_SIZE: "File size is too large. Maximum size is 5MB.",
-            INVALID_IMAGE: "The uploaded file is not a valid image."
-        }
-
+    REQUEST_TOKEN: {
+        SUCCESS: "Request token created successfully.",
+        FAILED: "Failed to request a token. ",
+        NOT_FOUND: "No request token found.",
+        EXPIRED: "Request token has expired.",
+        ALREADY_USED: "Request token has already used. Please request a new one."
     }
+
+    // <----------- END ------------->
 }
 
 module.exports = commonConstants

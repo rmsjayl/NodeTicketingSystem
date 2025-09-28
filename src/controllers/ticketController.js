@@ -4,7 +4,6 @@ const User = require("../models/user");
 const Category = require("../models/category");
 const Ticket = require("../models/ticket");
 const { Sequelize } = require('sequelize');
-const req = require("express/lib/request");
 
 
 exports.getTickets = async (req, res) => {

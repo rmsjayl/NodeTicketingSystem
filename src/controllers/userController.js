@@ -60,7 +60,7 @@ exports.getUserById = async (req, res) => {
         if (!user) {
             return res.status(commonConstants.STATUS_CODE.NOT_FOUND).json({
                 success: false,
-                message: commonConstants.USER.RETRIEVE.FAILED
+                message: commonConstants.USER.RETRIEVE.NOT_FOUND
             })
         }
 
@@ -87,7 +87,7 @@ exports.deleteUsers = async (req, res) => {
         if (!user) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
-                message: commonConstants.USER.RETRIEVE.FAILED
+                message: commonConstants.USER.RETRIEVE.NOT_FOUND
             })
         }
 
@@ -128,7 +128,7 @@ exports.updateUser = async (req, res) => {
         if (!user) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
-                message: commonConstants.USER.RETRIEVE.FAILED
+                message: commonConstants.USER.RETRIEVE.NOT_FOUND
             });
         }
 
