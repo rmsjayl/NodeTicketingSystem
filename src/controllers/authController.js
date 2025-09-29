@@ -339,6 +339,7 @@ exports.googleCallback = (req, res, next) => {
             const email = user.profile.emails[0].value;
             const firstName = user.profile.name.givenName;
             const lastName = user.profile.name.familyName;
+            const roleToAssign = commonConstants.USER.ROLES.AGENT; // Default role for google login
 
             let authenticatedUser = await User.findOne({
                 where: {
@@ -353,22 +354,18 @@ exports.googleCallback = (req, res, next) => {
                     lastName: lastName,
                     email: email,
                     password: commonHelpers.passwordHasher(commonConstants.USER.GOOGLE.CREDENTIAL.DEFAULT_USER_PASSWORD),
-                    roles: commonConstants.USER.GOOGLE.CREDENTIAL.DEFAULT_USER_ROLE
+                    roles: roleToAssign
                 });
             }
 
             // Generate application access and refresh tokens (JWTs)
-            const accessTokenJWT = commonHelpers.generateEmailAccessToken(email);
-
-            const refreshTokenJWT = commonHelpers.generateRefreshToken(email);
-
+            const token = commonHelpers.generateAccessToken(authenticatedUser.id, authenticatedUser.roles)
 
             return res.status(commonConstants.STATUS_CODE.OK).json({
                 success: true,
                 message: commonConstants.USER.GOOGLE.CREATE.SUCCESS,
                 data: authenticatedUser,
-                accessToken: accessTokenJWT,
-                refreshToken: refreshTokenJWT,
+                token: token
             });
 
         } catch (error) {
