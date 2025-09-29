@@ -8,12 +8,12 @@ const commonConstants = require("../common/constants");
 router
     .route("/")
     .get(
-        // authenticate,
-        // authorizeRoles(
-        //     [
-        //         commonConstants.USER.ROLES.SUPER_ADMIN
-        //     ]
-        // ), 
+        authenticate,
+        authorizeRoles(
+            [
+                commonConstants.USER.ROLES.SUPER_ADMIN
+            ]
+        ), 
         getCategories
     )
     .post(

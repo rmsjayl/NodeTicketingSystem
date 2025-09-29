@@ -1,7 +1,8 @@
 const req = require("express/lib/request");
 const commonConstants = require("../common/constants");
 const commonHelpers = require("../common/helpers");
-const User = require("../models/user")
+const User = require("../models/user");
+const sendEmail = require("../utilities/sendEmail");
 
 exports.getUsers = async (req, res) => {
     try {
@@ -69,7 +70,7 @@ exports.getUserById = async (req, res) => {
             message: commonConstants.USER.RETRIEVE.SUCCESS,
             data: user
         })
-        
+
     } catch (error) {
         return res.status(commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR).json({
             success: false,
@@ -109,19 +110,24 @@ exports.deleteUsers = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     const id = req.params.id;
-    const { firstName, lastName, role, username } = req.body;
+    const { firstName, lastName, roles, username } = req.body;
 
     try {
 
-        const payload = { firstName, lastName, role, username };
-        const validatedInputs = commonHelpers.payloadValidation(payload);
+        const payload = { firstName, lastName, roles, username };
+        
 
-        if (validatedInputs) {
-            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
-                success: false,
-                message: validatedInputs
-            });
-        }
+        // Get a new Date object for the current time
+        const now = new Date();
+
+        // Define the formatting options for the date and time
+        const dateFormatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' });
+        const timeFormatter = new Intl.DateTimeFormat('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true,
+        });
 
         const user = await User.findByPk(id);
 
@@ -132,19 +138,36 @@ exports.updateUser = async (req, res) => {
             });
         }
 
-        if (user.firstName === firstName && user.lastName === lastName && user.roles === role && user.username === username) {
+        if (user.firstName === firstName && user.lastName === lastName && user.roles === roles && user.username === username) {
             return res.status(commonConstants.STATUS_CODE.ACCEPTED).json({
                 success: true,
                 message: commonConstants.USER.UPDATE.NO_CHANGE
             });
         }
 
-        await user.update({
-            firstName: firstName,
-            lastName: lastName,
-            roles: role,
-            username: username
-        });
+        const updates = commonHelpers.checkPayloadValuesForUpdate(payload);
+
+        if (updates === null) {
+            return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
+                success: false,
+                message: commonConstants.PAYLOAD_VALIDATION.UPDATE_DETAILS
+            });
+        }
+
+        await user.update(updates);
+
+        // Send email to notify user of the following account changes
+        sendEmail(
+            user.email,
+            commonConstants.EMAIL_TYPES.CHANGE_ACCOUNT_DETAILS,
+            commonConstants.EMAIL_TYPES.CHANGE_ACCOUNT_DETAILS,
+            {
+                username: user.username,
+                date: dateFormatter.format(now),
+                time: timeFormatter.format(now),
+                changes: updates
+
+            });
 
         return res.status(commonConstants.STATUS_CODE.OK).json({
             success: true,

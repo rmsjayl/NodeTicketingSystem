@@ -34,6 +34,33 @@ const commonHelpers = {
             }
         }
     },
+    checkPayloadValuesForUpdate: function (payload, user) {
+
+        const updates = {};
+
+        for (var payloadKey in payload) {
+            const dbKey = payloadKey;
+            const newValue = payload[dbKey];
+
+            if (newValue !== undefined && newValue !== null) {
+
+                let trimmedNewValue = typeof newValue === 'string' ? newValue.trim() : newValue;
+
+                if (typeof trimmedNewValue === 'string' && trimmedNewValue.length === 0) {
+                    continue;
+                }
+
+                updates[dbKey] = trimmedNewValue; // Store payload with values
+            }
+        }
+
+        if (Object.keys(updates).length === 0) {
+            return null;
+        }
+
+        return updates;
+
+    },
     generateRandomToken: function () {
         return crypto.lib.WordArray.random(16).toString(crypto.enc.Hex);
     },
