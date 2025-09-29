@@ -42,7 +42,8 @@ var commonConstants = {
     // <----------- END ------------->
 
     PAYLOAD_VALIDATION: {
-        KEY_NOT_PROVIDED: "Request is invalid."
+        KEY_NOT_PROVIDED: "Request is invalid.",
+        UPDATE_DETAILS: "No valid changes were provided."
     },
 
     LOGIN: {
@@ -68,7 +69,8 @@ var commonConstants = {
         REQUEST_TOKEN: "Request Token",
         UPDATE_PASSWORD: "Update Password",
         FORGOT_PASSWORD: "Forgot Password",
-        TICKET_DETAILS: "Ticket Details"
+        TICKET_DETAILS: "Ticket Details",
+        CHANGE_ACCOUNT_DETAILS: "Change Account Details"
     },
 
     TOKEN: {
