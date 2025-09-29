@@ -4,7 +4,8 @@ const commonConstants = require("../common/constants");
 
 const TEMPLATE_PATHS = {
     [commonConstants.EMAIL_TYPES.ACCOUNT_VERIFICATION]: "../templates/accountVerification.hbs",
-    [commonConstants.EMAIL_TYPES.FORGOT_PASSWORD]: "../templates/forgotPassword.hbs"
+    [commonConstants.EMAIL_TYPES.FORGOT_PASSWORD]: "../templates/forgotPassword.hbs",
+    [commonConstants.EMAIL_TYPES.CHANGE_ACCOUNT_DETAILS]: "../templates/accountChangeEmailNotif.hbs"
 }
 
 const sendEmail = async (receiver, type, subject, data) => {
