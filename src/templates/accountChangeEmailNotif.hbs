@@ -1,0 +1,81 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Change Notification</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; text-align: center">
+
+    <div>
+        <h2 style="font-weight: bold">Account Changes Notified for {{data.username}}</h2>
+    </div>
+
+    <div>
+        <p>
+            This email is to confirm that changes were recently made to your account with the Blackfort Dev Team
+            Ticketing System.
+        </p>
+
+        <p>
+            The following change(s) were made on {{data.date}} at {{data.time}}:
+        </p>
+
+        <ul>
+            {{#each data.changes as |value key|}}
+            <li style="margin-bottom: 0.5rem; color: #333;">
+                <span style="font-weight: bold; text-transform: capitalize;">
+                    {{key}}
+                </span>
+                has been updated to:
+                <span style="color: #fc3838; font-weight: bold;">
+                    {{value}}
+                </span>
+            </li>
+            {{/each}}
+        </ul>
+
+        <p>
+            If you made these changes, you can safely ignore this email.
+        </p>
+    </div>
+
+    {{!-- <div style="margin: 2rem 0;">
+        <p style="font-weight: bold; font-size: 1.1em; color: #fc3838; margin-bottom: 1rem;">
+            If you did NOT make these changes, please secure your account immediately:
+        </p>
+        <button
+            style="background-color: #fc3838; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: bold; cursor: pointer;">
+            <a style="color: #fff; text-decoration: none; text-transform: uppercase;" href="{{data.security_link}}">
+                Secure Your Account
+            </a>
+        </button>
+    </div> --}}
+
+    <footer>
+        <p>If you have any concerns, please feel free to reach us at:</p>
+
+        <p style="margin: 0; padding: 0;"><small>#1 Salcedo Village. 123 Makati, City, Philippines, 20189</small></p>
+        <p style="margin: 0; padding: 0;"><small>+63 123 4567 8901</small></p>
+        <p style="margin: 0; padding: 0;"><small>inquiries@ticketingsys.com</small></p>
+        <p style="margin: 0; padding: 0;"><small>inquiries@facebook.com</small></p>
+        <p style="margin: 0; padding: 0;"><small>inquiries@messenger.com</small></p>
+
+    </footer>
+
+    <div style="padding: 1rem">
+        <small>*** This is a system generated message.
+            <span style="font-weight: bolder">DO NOT REPLY TO THIS EMAIL</span>
+            ***</small>
+    </div>
+
+    <div>
+        <p>
+            &copy; 2024 BF Team Ticketing System. All rights reserved.
+        </p>
+    </div>
+
+</body>
+
+</html>
