@@ -1,5 +1,5 @@
 const express = require("express");
-
+const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
 require("./utilities/passport"); // register strategy
@@ -12,9 +12,18 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const allowedOrigins = [
+  'http://localhost:8080',
+];
+
+const corsOptions = {
+  origin: allowedOrigins,
+  optionsSuccessStatus: 200
+};
 
 const app = express();
 app.use(express.json());
+app.use(cors(corsOptions));
 const PORT = process.env.PORT
 
 // Session middleware must be before routes
