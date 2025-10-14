@@ -5,6 +5,7 @@ const Token = require("../models/token");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utilities/sendEmail");
+const { OAuth2Client } = require('google-auth-library');
 
 exports.register = async (req, res) => {
     const { firstName, lastName, email, password, roles, username } = req.body;
@@ -257,7 +258,7 @@ exports.resetPassword = async (req, res) => {
             });
         }
 
-        if(token.isUsed){
+        if (token.isUsed) {
             return res.status(commonConstants.STATUS_CODE.BAD_REQUEST).json({
                 success: false,
                 message: commonConstants.REQUEST_TOKEN.ALREADY_USED
@@ -294,8 +295,8 @@ exports.resetPassword = async (req, res) => {
         // if the updated password matches the current password of the user, THROW an error;
         const isMatchCurrentPassword = commonHelpers.passwordCompare(password, user.password);
 
-        if(isMatchCurrentPassword){
-             return res.status(commonConstants.STATUS_CODE.UNAUTHORIZED).json({
+        if (isMatchCurrentPassword) {
+            return res.status(commonConstants.STATUS_CODE.UNAUTHORIZED).json({
                 success: false,
                 message: commonConstants.USER.RESET_PASSWORD.FAILED,
             });
@@ -325,8 +326,84 @@ exports.resetPassword = async (req, res) => {
     }
 };
 
+exports.googleIdTokenLogin = async (req, res, next) => {
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    const client = new OAuth2Client(clientId);
+
+    const authHeader = req.headers.authorization;
+    let googleToken;
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        // The token is expected to be in the format: "Bearer <token>"
+        googleToken = authHeader.split(' ')[1];
+    }
+
+    if (!googleToken) {
+        // If the token is missing or not in the 'Bearer' format
+        return res.status(commonConstants.STATUS_CODE.UNAUTHORIZED).json({
+            success: false,
+            message: "Google ID Token is missing or improperly formatted in the Authorization header (Expected: Bearer <token>).",
+        });
+    }
+
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: googleToken,
+            audience: clientId,
+        });
+
+        const payload = ticket.getPayload();
+
+        const email = payload['email'];
+        const firstName = payload['given_name'];
+        const lastName = payload['family_name'];
+        const roleToAssign = commonConstants.USER.ROLES.AGENT;
+
+        let successMessage = commonConstants.USER.GOOGLE.EXISTS.SUCCESS;
+
+        let authenticatedUser = await User.findOne({
+            where: {
+                email: email
+            }
+        });
+
+        // If the user doesn't exist, create them
+        if (!authenticatedUser) {
+            authenticatedUser = await User.create({
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: commonHelpers.passwordHasher(commonConstants.USER.GOOGLE.CREDENTIAL.DEFAULT_USER_PASSWORD),
+                roles: roleToAssign
+            });
+
+            successMessage = commonConstants.USER.GOOGLE.CREATE.SUCCESS; // Update message for new user
+        }
+
+        // Generate application access and refresh tokens (JWTs)
+        const token = commonHelpers.generateAccessToken(authenticatedUser.id, authenticatedUser.roles)
+
+        return res.status(commonConstants.STATUS_CODE.OK).json({
+            success: true,
+            message: successMessage,
+            data: authenticatedUser,
+            token: token
+        });
+
+    } catch (error) {
+        const statusCode = (error.message && (error.message.includes('expired') || error.message.includes('Invalid ID Token')))
+            ? commonConstants.STATUS_CODE.UNAUTHORIZED
+            : commonConstants.STATUS_CODE.INTERNAL_SERVER_ERROR;
+
+        return res.status(statusCode).json({
+            success: false,
+            message: `Authentication error: ${error.message}`,
+        });
+    }
+}
+
 exports.googleCallback = (req, res, next) => {
-    passport.authenticate("google", { session: false }, async (err, user) => {
+    passport.authenticate("google", { session: false }, async (err, user, info) => {
 
         try {
             if (err || !user) {

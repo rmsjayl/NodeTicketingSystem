@@ -8,6 +8,7 @@ const {
     forgotPassword,
     resetPassword,
     googleCallback,
+    googleIdTokenLogin
 } = require("../controllers/authController");
 
 router
@@ -33,5 +34,9 @@ router
 router
     .route("/googleCallback")
     .get(googleCallback);
+
+router
+    .route("/googleIdTokenLogin")
+    .post(googleIdTokenLogin);
 
 module.exports = router;
