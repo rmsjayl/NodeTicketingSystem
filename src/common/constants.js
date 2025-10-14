@@ -181,6 +181,9 @@ var commonConstants = {
             FAILED: "Unable to send email upon creation. "
         },
         GOOGLE: {
+            EXISTS:{
+                SUCCESS: "User logged in successfully.",
+            },
             CREATE: {
                 SUCCESS: "User created successfully.",
                 FAILED: "Unable to create a user. "
