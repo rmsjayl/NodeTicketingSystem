@@ -13,7 +13,8 @@ const userRoutes = require("./routes/userRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const allowedOrigins = [
-  'http://localhost:8080',
+  '*',
+  'http://localhost:8080'
 ];
 
 const corsOptions = {
